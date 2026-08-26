@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Danh Mục Thông Số Đồng Hồ Nước</title>
+    <style>
+        :root {
+            --excel-header-bg: #107c41;
+            --excel-header-text: #ffffff;
+            --bg-color: #f0f4f1;
+            --card-bg: #ffffff;
+            --input-bg: #f9fbf9;
+            --border-color: #c8d6c9;
+            --accent-blue: #005a9e;
+            --hover-bg: #eaf4eb;
+            --table-header-bg: #107c41;
+            --table-subhead-bg: #1e8e4f;
+            --focus-yellow-bg: #fffde6;
+            --focus-yellow-border: #e6b800;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: #242424;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .header-bar {
+            background-color: var(--excel-header-bg);
+            color: var(--excel-header-text);
+            text-align: center;
+            padding: 14px 10px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 12px 15px;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--excel-header-bg);
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            background: #e8f0e9;
+            color: #2e4d32;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: #d5e6d7;
+        }
+
+        .tab-btn.active {
+            background: var(--excel-header-bg);
+            color: #ffffff;
+            border-color: var(--excel-header-bg);
+        }
+
+        /* Search Box */
+        .search-container {
+            margin-bottom: 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .search-box:focus {
+            background-color: var(--focus-yellow-bg);
+            border-color: var(--focus-yellow-border);
+            box-shadow: 0 0 0 3px rgba(255, 235, 130, 0.45);
+        }
+
+        /* Table Wrapper & Styling */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: #ffffff;
+            max-height: 68vh;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            border: 1px solid #d0e0d2;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: var(--table-header-bg);
+            color: #ffffff;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        th.sub-header {
+            background-color: var(--table-subhead-bg);
+            font-size: 0.8rem;
+            top: 35px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f7faf8;
+        }
+
+        tbody tr:hover {
+            background-color: var(--hover-bg);
+            font-weight: 600;
+        }
+
+        .unit-note {
+            font-size: 0.82rem;
+            color: #444;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .dn-col {
+            font-weight: bold;
+            color: var(--accent-blue);
+            background-color: #f2f7fc !important;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+        }
+
+        .footer-note {
+            margin-top: 10px;
+            font-size: 0.78rem;
+            color: #666;
+            text-align: right;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-bar">DANH MỤC THÔNG SỐ ĐỒNG HỒ NƯỚC</div>
+
+    <div class="content">
+        <!-- Tab navigation -->
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab(0)">1. Đồng Hồ Cơ Khí</button>
+            <button class="tab-btn" onclick="switchTab(1)">2. Điện Từ Chạy Pin (MAG 8000)</button>
+            <button class="tab-btn" onclick="switchTab(2)">3. Điện Từ Điện Lưới (MAG 5000)</button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Nhập Kích cỡ (DN15, DN50...), áp lực hoặc thông số để lọc..." onkeyup="filterTable()">
+        </div>
+
+        <!-- TAB 1: CƠ KHÍ -->
+        <div class="tab-content active" id="tab0">
+            <div class="unit-note">📌 Bảng thông số lưu lượng đồng hồ nước lạnh cơ khí (Cấp B & Cấp C) | Đơn vị: <b>m³/h</b></div>
+            <div class="table-wrapper">
+                <table id="table0">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Kích cỡ (DN)</th>
+                            <th rowspan="2">Kiểu kết nối</th>
+                            <th rowspan="2">Lưu lượng Danh định (Q₃)<br><small style="font-weight:normal">(Cố định)</small></th>
+                            <th rowspan="2">Lưu lượng Quá tải (Q₄)<br><small style="font-weight:normal">(Cố định)</small></th>
+                            <th colspan="2">Thông số Cấp B (R=80)</th>
+                            <th colspan="2">Thông số Cấp C (R=160)</th>
+                        </tr>
+                        <tr>
+                            <th class="sub-header">Tối thiểu (Q₁)</th>
+                            <th class="sub-header">Chuyển tiếp (Q₂)</th>
+                            <th class="sub-header">Tối thiểu (Q₁)</th>
+                            <th class="sub-header">Chuyển tiếp (Q₂)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="dn-col">DN15</td><td>Lắp ren</td><td>2.5</td><td>3.125</td><td>0.031</td><td>0.05</td><td>0.015</td><td>0.025</td></tr>
+                        <tr><td class="dn-col">DN20</td><td>Lắp ren</td><td>4</td><td>5</td><td>0.05</td><td>0.08</td><td>0.025</td><td>0.04</td></tr>
+                        <tr><td class="dn-col">DN25</td><td>Lắp ren</td><td>6.3</td><td>7.875</td><td>0.078</td><td>0.126</td><td>0.039</td><td>0.063</td></tr>
+                        <tr><td class="dn-col">DN32</td><td>Lắp ren</td><td>10</td><td>12.5</td><td>0.125</td><td>0.2</td><td>0.062</td><td>0.1</td></tr>
+                        <tr><td class="dn-col">DN40</td><td>Ren / Bích</td><td>16</td><td>20</td><td>0.2</td><td>0.32</td><td>0.1</td><td>0.16</td></tr>
+                        <tr><td class="dn-col">DN50</td><td>Mặt bích</td><td>40</td><td>50</td><td>0.5</td><td>0.8</td><td>0.25</td><td>0.4</td></tr>
+                        <tr><td class="dn-col">DN65</td><td>Mặt bích</td><td>63</td><td>78.75</td><td>0.787</td><td>1.26</td><td>0.393</td><td>0.63</td></tr>
+                        <tr><td class="dn-col">DN80</td><td>Mặt bích</td><td>100</td><td>125</td><td>1.25</td><td>2</td><td>0.625</td><td>1</td></tr>
+                        <tr><td class="dn-col">DN100</td><td>Mặt bích</td><td>160</td><td>200</td><td>2</td><td>3.2</td><td>1</td><td>1.6</td></tr>
+                        <tr><td class="dn-col">DN125</td><td>Mặt bích</td><td>160</td><td>200</td><td>2</td><td>3.2</td><td>1</td><td>1.6</td></tr>
+                        <tr><td class="dn-col">DN150</td><td>Mặt bích</td><td>250</td><td>312.5</td><td>3.125</td><td>5</td><td>1.562</td><td>2.5</td></tr>
+                        <tr><td class="dn-col">DN200</td><td>Mặt bích</td><td>400</td><td>500</td><td>5</td><td>8</td><td>2.5</td><td>4</td></tr>
+                        <tr><td class="dn-col">DN250</td><td>Mặt bích</td><td>630</td><td>787.5</td><td>7.875</td><td>12.6</td><td>3.937</td><td>6.3</td></tr>
+                        <tr><td class="dn-col">DN300</td><td>Mặt bích</td><td>1000</td><td>1250</td><td>12.5</td><td>20</td><td>6.25</td><td>10</td></tr>
+                        <tr><td class="dn-col">DN350</td><td>Mặt bích</td><td>1000</td><td>1250</td><td>12.5</td><td>20</td><td>6.25</td><td>10</td></tr>
+                        <tr><td class="dn-col">DN400</td><td>Mặt bích</td><td>1600</td><td>2000</td><td>20</td><td>32</td><td>10</td><td>16</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 2: ĐIỆN TỪ CHẠY PIN -->
+        <div class="tab-content" id="tab1">
+            <div class="unit-note">📌 SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: <b>m³/h</b></div>
+            <div class="table-wrapper">
+                <table id="table1">
+                    <thead>
+                        <tr>
+                            <th>Kích cỡ (DN)</th>
+                            <th>Tương ứng (Inch)</th>
+                            <th>Lưu lượng tối thiểu (Q₁)</th>
+                            <th>Lưu lượng chuyển tiếp (Q₂)</th>
+                            <th>Lưu lượng danh định (Q₃)</th>
+                            <th>Lưu lượng quá tải (Q₄)</th>
+                            <th>Áp lực tối đa (PN)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="dn-col">DN25</td><td>1"</td><td>0.05</td><td>0.08</td><td>4</td><td>5</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN40</td><td>1 1/2"</td><td>0.125</td><td>0.2</td><td>10</td><td>12.5</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN50</td><td>2"</td><td>0.2</td><td>0.32</td><td>16</td><td>20</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN65</td><td>2 1/2"</td><td>0.313</td><td>0.5</td><td>25</td><td>31.25</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN80</td><td>3"</td><td>0.5</td><td>0.8</td><td>40</td><td>50</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN100</td><td>4"</td><td>0.788</td><td>1.26</td><td>63</td><td>78.75</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN125</td><td>5"</td><td>1.25</td><td>2</td><td>100</td><td>125</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN150</td><td>6"</td><td>2</td><td>3.2</td><td>160</td><td>200</td><td>PN16 / Cl150</td></tr>
+                        <tr><td class="dn-col">DN200</td><td>8"</td><td>3.125</td><td>5</td><td>250</td><td>312.5</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN250</td><td>10"</td><td>5</td><td>8</td><td>400</td><td>500</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN300</td><td>12"</td><td>7.875</td><td>12.6</td><td>630</td><td>787.5</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN350</td><td>14"</td><td>12.5</td><td>20</td><td>1000</td><td>1250</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN400</td><td>16"</td><td>12.5</td><td>20</td><td>1000</td><td>1250</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN500</td><td>20"</td><td>20</td><td>32</td><td>1600</td><td>2000</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN600</td><td>24"</td><td>31.25</td><td>50</td><td>2500</td><td>3125</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN700</td><td>28"</td><td>50</td><td>80</td><td>4000</td><td>5000</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN800</td><td>32"</td><td>50</td><td>80</td><td>4000</td><td>5000</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN900</td><td>36"</td><td>78.75</td><td>126</td><td>6300</td><td>7875</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN1000</td><td>40"</td><td>78.75</td><td>126</td><td>6300</td><td>7875</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN1200</td><td>48"</td><td>125</td><td>200</td><td>10000</td><td>12500</td><td>PN10</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 3: ĐIỆN TỪ ĐIỆN LƯỚI -->
+        <div class="tab-content" id="tab2">
+            <div class="unit-note">📌 SIEMENS SITRANS FM MAG 5000 (Chạy Điện Lưới) | Đơn vị: <b>m³/h</b></div>
+            <div class="table-wrapper">
+                <table id="table2">
+                    <thead>
+                        <tr>
+                            <th>Kích cỡ (DN)</th>
+                            <th>Tương ứng (Inch)</th>
+                            <th>Lưu lượng tối thiểu<br><small style="font-weight:normal">(v = 0.1 m/s)</small></th>
+                            <th>Lưu lượng thông dụng thấp<br><small style="font-weight:normal">(v = 1.0 m/s)</small></th>
+                            <th>Lưu lượng thông dụng cao<br><small style="font-weight:normal">(v = 3.0 m/s)</small></th>
+                            <th>Lưu lượng kịch trần<br><small style="font-weight:normal">(v = 10 m/s)</small></th>
+                            <th>Áp lực vỏ bích tiêu chuẩn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="dn-col">DN15</td><td>1/2"</td><td>0.063</td><td>0.636</td><td>1.9</td><td>6.36</td><td>PN40</td></tr>
+                        <tr><td class="dn-col">DN25</td><td>1"</td><td>0.176</td><td>1.767</td><td>5.3</td><td>17.67</td><td>PN40</td></tr>
+                        <tr><td class="dn-col">DN40</td><td>1 1/2"</td><td>0.452</td><td>4.523</td><td>13.57</td><td>45.23</td><td>PN40</td></tr>
+                        <tr><td class="dn-col">DN50</td><td>2"</td><td>0.707</td><td>7.068</td><td>21.2</td><td>70.68</td><td>PN16</td></tr>
+                        <tr><td class="dn-col">DN65</td><td>2 1/2"</td><td>1.194</td><td>11.94</td><td>35.83</td><td>119.4</td><td>PN16</td></tr>
+                        <tr><td class="dn-col">DN80</td><td>3"</td><td>1.809</td><td>18.09</td><td>54.28</td><td>180.9</td><td>PN16</td></tr>
+                        <tr><td class="dn-col">DN100</td><td>4"</td><td>2.827</td><td>28.27</td><td>84.82</td><td>282.7</td><td>PN16</td></tr>
+                        <tr><td class="dn-col">DN125</td><td>5"</td><td>4.417</td><td>44.17</td><td>132.5</td><td>441.7</td><td>PN16</td></tr>
+                        <tr><td class="dn-col">DN150</td><td>6"</td><td>6.361</td><td>63.61</td><td>190.8</td><td>636.1</td><td>PN16</td></tr>
+                        <tr><td class="dn-col">DN200</td><td>8"</td><td>11.31</td><td>113.1</td><td>339.3</td><td>1131</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN250</td><td>10"</td><td>17.67</td><td>176.7</td><td>530.1</td><td>1767</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN300</td><td>12"</td><td>25.44</td><td>254.4</td><td>763.4</td><td>2544</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN350</td><td>14"</td><td>34.63</td><td>346.3</td><td>1039</td><td>3463</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN400</td><td>16"</td><td>45.23</td><td>452.3</td><td>1357</td><td>4523</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN500</td><td>20"</td><td>70.68</td><td>706.8</td><td>2120</td><td>7068</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN600</td><td>24"</td><td>101.78</td><td>1017</td><td>3053</td><td>10178</td><td>PN10 / PN16</td></tr>
+                        <tr><td class="dn-col">DN700</td><td>28"</td><td>138.54</td><td>1385</td><td>4156</td><td>13854</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN800</td><td>32"</td><td>180.95</td><td>1809</td><td>5428</td><td>18095</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN900</td><td>36"</td><td>229.02</td><td>2290</td><td>6870</td><td>22902</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN1000</td><td>40"</td><td>282.74</td><td>2827</td><td>8482</td><td>28274</td><td>PN10</td></tr>
+                        <tr><td class="dn-col">DN1200</td><td>48"</td><td>407.15</td><td>4071</td><td>12214</td><td>40715</td><td>PN10</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer-note">Dữ liệu tra cứu danh mục đồng hồ nước &copy; 2026</div>
+    </div>
+</div>
+
+<script>
+    let currentTabIndex = 0;
+
+    function switchTab(index) {
+        currentTabIndex = index;
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach((tab, i) => {
+            if (i === index) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        contents.forEach((content, i) => {
+            if (i === index) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
+
+        filterTable();
+    }
+
+    function filterTable() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toUpperCase();
+        const currentTable = document.getElementById('table' + currentTabIndex);
+        const tr = currentTable.getElementsByTagName('tr');
+
+        for (let i = 0; i < tr.length; i++) {
+            if (tr[i].getElementsByTagName('td').length > 0) {
+                let tdArray = tr[i].getElementsByTagName('td');
+                let match = false;
+                for (let j = 0; j < tdArray.length; j++) {
+                    if (tdArray[j]) {
+                        let txtValue = tdArray[j].textContent || tdArray[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = match ? "" : "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
