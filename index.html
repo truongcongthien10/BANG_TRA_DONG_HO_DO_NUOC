@@ -161,29 +161,35 @@
             border-collapse: collapse;
             font-size: 13.5px;
             text-align: center;
-            table-layout: fixed; /* Cố định tỉ lệ các cột cho đều */
+            table-layout: fixed;
         }
 
         /* Phân bổ tỷ lệ độ rộng các cột (7 cột) */
-        th:nth-child(1), td:nth-child(1) { width: 14%; } /* DN */
-        th:nth-child(2), td:nth-child(2) { width: 14%; } /* Inch */
+        th:nth-child(1), td:nth-child(1) { width: 13%; } /* Kích cỡ */
+        th:nth-child(2), td:nth-child(2) { width: 13%; } /* Tương ứng */
         th:nth-child(3), td:nth-child(3) { width: 15%; } /* Q1 / Qmin */
         th:nth-child(4), td:nth-child(4) { width: 15%; } /* Q2 / Qt */
         th:nth-child(5), td:nth-child(5) { width: 15%; } /* Q3 / Qn */
         th:nth-child(6), td:nth-child(6) { width: 15%; } /* Q4 / Qmax */
-        th:nth-child(7), td:nth-child(7) { width: 12%; } /* Áp lực */
+        th:nth-child(7), td:nth-child(7) { width: 14%; } /* Áp lực */
 
         th {
             background-color: #005a36;
             color: white;
-            padding: 10px 6px;
+            padding: 10px 4px;
             position: sticky;
             top: 0;
             z-index: 10;
             font-weight: 600;
             border: 1px solid #004428;
             vertical-align: middle;
-            word-wrap: break-word;
+            line-height: 1.3;
+        }
+
+        /* Style chữ subscript cho đẹp và rõ */
+        th sub {
+            font-size: 10px;
+            bottom: -0.2em;
         }
 
         td {
@@ -191,7 +197,7 @@
             border: 1px solid #e0e0e0;
             color: #333;
             vertical-align: middle;
-            cursor: pointer; /* Đổi con trỏ chuột thành dạng chọn */
+            cursor: pointer;
             transition: background-color 0.15s, color 0.15s;
         }
 
@@ -206,12 +212,11 @@
         /* Style cho DÒNG ĐƯỢC CHỌN (Highlight) */
         tr.selected-row {
             background-color: #fff9c4 !important; /* Vàng nhạt */
-            color: #d32f2f !important;            /* Chữ đỏ */
             font-weight: bold;
         }
 
         tr.selected-row td {
-            color: #d32f2f !important; /* Đảm bảo tất cả các ô trong dòng đều chữ đỏ */
+            color: #d32f2f !important; /* Chữ đỏ */
         }
 
         .text-bold {
@@ -256,7 +261,7 @@
         </div>
     </div>
 
-    <!-- Ghế chú thích chuẩn -->
+    <!-- Banner chú thích -->
     <div class="info-note" id="infoNote">
         📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h
     </div>
@@ -397,21 +402,25 @@
 
         if (currentCategory === 'mag8000' || currentCategory === 'mag5000') {
             headers = [
-                'Kích cỡ (DN)', 'Tương ứng (Inch)', 
-                'Lưu lượng tối thiểu (Q₁)', 'Lưu lượng chuyển tiếp (Q₂)', 
-                'Lưu lượng danh định (Q₃)', 'Lưu lượng quá tải (Q₄)', 'Áp lực'
+                'Kích cỡ<br>(DN)', 
+                'Tương ứng<br>(Inch)', 
+                'Lưu lượng<br>tối thiểu (Q<sub>1</sub>)', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)', 
+                'Lưu lượng<br>danh định (Q<sub>3</sub>)', 
+                'Lưu lượng<br>quá tải (Q<sub>4</sub>)', 
+                'Áp lực<br>làm việc'
             ];
             data = (currentCategory === 'mag8000') ? dataMag8000 : dataMag5000;
 
             headers.forEach(h => {
                 let th = document.createElement('th');
-                th.textContent = h;
+                th.innerHTML = h;
                 thead.appendChild(th);
             });
 
             data.forEach(row => {
                 let tr = document.createElement('tr');
-                tr.onclick = function() { selectRow(this); }; // Thêm sự kiện click chọn dòng
+                tr.onclick = function() { selectRow(this); };
                 tr.innerHTML = `
                     <td class="text-bold">${row.dn}</td>
                     <td>${row.inch}</td>
@@ -425,21 +434,25 @@
             });
         } else {
             headers = [
-                'Kích cỡ (DN)', 'Tương ứng (Inch)', 
-                'Lưu lượng tối thiểu (Qmin)', 'Lưu lượng chuyển tiếp (Qt)', 
-                'Lưu lượng danh định (Qn)', 'Lưu lượng tối đa (Qmax)', 'Áp lực làm việc'
+                'Kích cỡ<br>(DN)', 
+                'Tương ứng<br>(Inch)', 
+                'Lưu lượng<br>tối thiểu (Q<sub>min</sub>)', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>t</sub>)', 
+                'Lưu lượng<br>danh định (Q<sub>n</sub>)', 
+                'Lưu lượng<br>tối đa (Q<sub>max</sub>)', 
+                'Áp lực<br>làm việc'
             ];
             data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
 
             headers.forEach(h => {
                 let th = document.createElement('th');
-                th.textContent = h;
+                th.innerHTML = h;
                 thead.appendChild(th);
             });
 
             data.forEach(row => {
                 let tr = document.createElement('tr');
-                tr.onclick = function() { selectRow(this); }; // Thêm sự kiện click chọn dòng
+                tr.onclick = function() { selectRow(this); };
                 tr.innerHTML = `
                     <td class="text-bold">${row.dn}</td>
                     <td>${row.inch}</td>
@@ -458,11 +471,8 @@
 
     // Hàm xử lý highlight khi bấm vào dòng
     function selectRow(row) {
-        // Bỏ highlight ở tất cả các dòng khác
         const rows = document.querySelectorAll('#tableBody tr');
         rows.forEach(r => r.classList.remove('selected-row'));
-        
-        // Thêm class highlight vào dòng vừa được click
         row.classList.add('selected-row');
     }
 
