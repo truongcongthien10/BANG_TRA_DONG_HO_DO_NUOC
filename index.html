@@ -29,20 +29,20 @@
             border: 1px solid #cbd5e1;
         }
 
-        /* HEADER CHỈNH SỬA TỔNG THỂ */
+        /* HEADER & LOGO NHÚNG TRỰC TIẾP SVG */
         .header {
             background: linear-gradient(135deg, #0f2b5c 0%, #1e40af 100%);
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
+            padding: 10px 20px;
             position: relative;
         }
 
         .header-logo-container {
             background: #ffffff;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 6px;
             display: flex;
             align-items: center;
@@ -50,8 +50,8 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        .header-logo {
-            height: 45px;
+        .header-logo-svg {
+            height: 42px;
             width: auto;
             display: block;
         }
@@ -67,7 +67,7 @@
         }
 
         .header-spacer {
-            width: 55px; /* Giữ cân bằng layout đối ứng với logo */
+            width: 120px; /* Cân bằng với độ rộng container logo */
         }
 
         .main-controls {
@@ -407,7 +407,6 @@
             font-weight: bold;
         }
 
-        /* FOOTER ĐÃ BỔ SUNG ĐƠN VỊ PHÒNG KỸ THUẬT - HUEWACO */
         .footer {
             display: flex;
             justify-content: space-between;
@@ -432,8 +431,14 @@
 <div class="container">
     <div class="header">
         <div class="header-logo-container">
-            <!-- Đặt file HueWACO.png cùng thư mục với file HTML này -->
-            <img src="HueWACO.png" alt="HueWACO Logo" class="header-logo" onerror="this.style.display='none'">
+            <!-- LOGO HUEWACO VECTOR SVG NHÚNG TRỰC TIẾP HẠN CHẾ LỖI NGUYÊN BẢN -->
+            <svg class="header-logo-svg" viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg">
+                <!-- Biểu tượng sóng nước HueWACO -->
+                <path d="M 12 34 C 20 20, 28 40, 36 26 C 40 20, 42 12, 36 8 C 28 3, 22 18, 16 26 C 12 30, 8 28, 6 24 C 4 20, 8 12, 14 8" fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M 22 38 C 30 24, 38 44, 46 30 C 50 24, 52 16, 46 12 C 38 7, 32 22, 26 30" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+                <!-- Chữ HueWACO -->
+                <text x="56" y="33" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" fill="#0f2b5c" letter-spacing="-0.5">Hue<tspan fill="#0284c7">WACO</tspan></text>
+            </svg>
         </div>
         <div class="header-title">
             Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
