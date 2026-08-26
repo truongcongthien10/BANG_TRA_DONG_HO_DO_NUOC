@@ -46,35 +46,39 @@
             border-bottom: 1px solid #e0e0e0;
         }
 
-        /* Tab buttons */
+        /* Tối ưu thanh Tab danh mục */
         .tab-group {
             display: flex;
             gap: 10px;
             margin-bottom: 12px;
-            flex-wrap: wrap;
+            width: 100%;
         }
 
         .tab-btn {
-            padding: 10px 18px;
-            border: 1px solid #ccc;
-            background-color: #e9ecef;
-            color: #333;
-            font-weight: bold;
+            flex: 1; /* Chiều rộng 3 nút tự động bằng nhau */
+            padding: 10px 15px;
+            border: 1px solid #cccccc;
+            background-color: #f1f3f5;
+            color: #495057;
+            font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-in-out;
             font-size: 14px;
+            text-align: center;
         }
 
         .tab-btn:hover {
-            background-color: #dde2e6;
+            background-color: #e9ecef;
+            border-color: #adb5bd;
         }
 
+        /* Style cho nút đang được chọn */
         .tab-btn.active {
-            background-color: #76bc21;
+            background-color: #005a36; /* Xanh lá đậm đồng bộ với Header */
             color: #ffffff;
-            border-color: #5c9319;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            border-color: #004428;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
         }
 
         /* Sub controls cho Cơ khí */
@@ -186,7 +190,6 @@
             line-height: 1.3;
         }
 
-        /* Style chữ subscript cho đẹp và rõ */
         th sub {
             font-size: 10px;
             bottom: -0.2em;
