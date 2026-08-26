@@ -378,12 +378,21 @@
         }
 
         .footer {
-            text-align: right;
-            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
             font-size: 12px;
-            color: #777;
+            color: #666;
             background-color: #fafafa;
             border-top: 1px solid #eee;
+        }
+
+        .footer-dept {
+            font-weight: bold;
+            color: #005a36;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
@@ -483,7 +492,8 @@
     </div>
 
     <div class="footer">
-        Dữ liệu tra cứu & hỗ trợ thiết kế thủy lực © 2026
+        <div class="footer-dept">PHÒNG KỸ THUẬT - HueWACO</div>
+        <div>Dữ liệu tra cứu & hỗ trợ thiết kế thủy lực © 2026</div>
     </div>
 </div>
 
@@ -554,10 +564,8 @@
         currentCategory = cat;
         localStorage.setItem('activeWaterMeterTab', cat);
 
-        // Reset trạng thái active của tất cả các tab
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-        // Highlight đúng tab được kích hoạt
         if (cat === 'mag8000') document.getElementById('btn-pin').classList.add('active');
         if (cat === 'mag5000') document.getElementById('btn-dien').classList.add('active');
         if (cat === 'co_khi') document.getElementById('btn-co-khi').classList.add('active');
@@ -832,7 +840,6 @@
         resultBox.style.display = 'block';
     }
 
-    // Tải tab đã lưu trước đó khi khởi chạy / F5
     window.addEventListener('DOMContentLoaded', () => {
         const savedTab = localStorage.getItem('activeWaterMeterTab') || 'mag8000';
         switchCategory(savedTab);
