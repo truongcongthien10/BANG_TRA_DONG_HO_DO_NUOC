@@ -29,30 +29,32 @@
             border: 1px solid #cbd5e1;
         }
 
-        /* HEADER & LOGO CHUẨN HUEWACO */
+        /* HEADER & LOGO HUEWACO CHUẨN */
         .header {
             background: linear-gradient(135deg, #0f2b5c 0%, #1e40af 100%);
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 20px;
+            padding: 8px 20px;
             position: relative;
         }
 
         .header-logo-container {
             background: #ffffff;
-            padding: 2px 6px;
+            padding: 4px 8px;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            height: 48px;
         }
 
-        .header-logo-svg {
-            height: 44px;
+        .header-logo-img {
+            height: 100%;
             width: auto;
+            object-fit: contain;
             display: block;
         }
 
@@ -67,7 +69,7 @@
         }
 
         .header-spacer {
-            width: 160px; /* Cân bằng chiều rộng với logo bên trái */
+            width: 100px;
         }
 
         .main-controls {
@@ -431,23 +433,8 @@
 <div class="container">
     <div class="header">
         <div class="header-logo-container">
-            <!-- LOGO HUEWACO VECTOR SVG CHUẨN NHẬN DIỆN THƯƠNG HIỆU -->
-            <svg class="header-logo-svg" viewBox="0 0 170 42" xmlns="http://www.w3.org/2000/svg">
-                <!-- Nền bo góc màu vàng chanh -->
-                <rect x="1" y="1" width="168" height="40" rx="8" ry="8" fill="#d0df00"/>
-                
-                <!-- Biểu tượng đường cong cách điệu màu xanh lá -->
-                <g transform="translate(6, 3)">
-                    <path d="M 12,28 C 6,24 6,14 14,9 C 22,4 30,12 24,20 C 20,25 14,21 16,16 C 18,12 24,14 22,18 C 20,21 18,18 18,16" 
-                          fill="none" stroke="#007a33" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M 22,31 C 12,28 10,16 20,11 C 28,7 34,18 28,25 C 24,29 20,25 22,20" 
-                          fill="none" stroke="#007a33" stroke-width="2.5" stroke-linecap="round"/>
-                </g>
-
-                <!-- Chữ HueWACO chính xác font và màu sắc -->
-                <text x="44" y="28" font-family="'Segoe UI', Arial, sans-serif" font-weight="800" font-size="20" fill="#0f2b5c" letter-spacing="-0.5">Hue</text>
-                <text x="82" y="28" font-family="'Segoe UI', Arial, sans-serif" font-weight="900" font-size="20" fill="#007a33" letter-spacing="-0.5">WACO</text>
-            </svg>
+            <!-- SỬ DỤNG FILE ĐỒNG BỘ NGUYÊN BẢN HueWACO.jpeg -->
+            <img class="header-logo-img" src="HueWACO.jpeg" alt="HueWACO Logo">
         </div>
         <div class="header-title">
             Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
@@ -848,7 +835,7 @@
             if (v > 3.0 || deltaP_mH2O > 6.3) {
                 statusClass = "danger-box";
                 mpe = NaN;
-                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ. Vi phạm TCVN 8783 / ISO 4064!";
+                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ. Vi phạm TCVN 8783 / ISO 4064!";
                 color = "#dc2626";
             } else if (v >= 0.03) {
                 mpe = 2.0;
