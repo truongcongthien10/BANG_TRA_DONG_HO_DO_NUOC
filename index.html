@@ -7,137 +7,102 @@
     <style>
         * {
             box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
         }
 
         body {
-            background-color: #f4f6f9;
-            padding: 15px;
+            background-color: #f4f6f8;
+            padding: 20px;
             display: flex;
             justify-content: center;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1100px;
             background: #ffffff;
-            border: 1px solid #dcdfe6;
             border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #dcdcdc;
         }
 
-        /* HEADER */
         .header {
-            background-color: #0d3b85;
+            background-color: #005a36;
             color: #ffffff;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .header-logo-container {
-            background: #ffffff;
-            padding: 4px 8px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 120px;
-            height: 42px;
-        }
-
-        .header-logo-img {
-            max-height: 36px;
-            max-width: 130px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .header-title {
-            font-size: 1.15rem;
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 20px;
             font-weight: bold;
             text-transform: uppercase;
-            text-align: center;
-            flex-grow: 1;
             letter-spacing: 0.5px;
         }
 
-        .header-spacer {
-            width: 120px;
+        .main-controls {
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        /* TABS NAVIGATION */
-        .nav-tabs {
+        .tab-group {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 15px 15px 0 15px;
-            background: #ffffff;
-            border-bottom: 2px solid #e2e8f0;
+            gap: 8px;
+            width: 100%;
         }
 
         .tab-btn {
             flex: 1;
-            min-width: 160px;
-            padding: 10px 16px;
-            background-color: #f8f9fa;
-            border: 1px solid #cbd5e0;
-            border-bottom: none;
-            border-radius: 6px 6px 0 0;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #4a5568;
+            padding: 12px 8px;
+            border: 1px solid #cccccc;
+            background-color: #f1f3f5;
+            color: #333333;
+            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
-            text-align: center;
             transition: all 0.2s ease-in-out;
+            font-size: 13.5px;
+            text-align: center;
+            outline: none;
         }
 
         .tab-btn:hover {
-            background-color: #edf2f7;
-            color: #1a56db;
+            background-color: #e2e8f0;
         }
 
         .tab-btn.active {
-            background-color: #0d3b85;
-            border-color: #0d3b85;
-            color: #ffffff;
+            background-color: #fff9c4 !important;
+            color: #b91c1c !important;
+            border: 2px solid #d97706 !important;
+            box-shadow: inset 0 0 0 1px #f59e0b, 0 2px 4px rgba(0,0,0,0.08);
         }
 
-        .tab-content {
+        .calc-view {
+            padding: 20px;
+            background-color: #f8fafc;
             display: none;
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        /* CONTENT AREA */
-        .content-box {
-            margin: 15px;
+        .calc-card {
+            background: #ffffff;
             padding: 20px;
+            border-radius: 6px;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .content-title {
-            color: #0d3b85;
-            font-size: 1rem;
-            font-weight: bold;
+        .calc-card h3 {
+            color: #0284c7;
+            font-size: 16px;
             margin-bottom: 15px;
         }
 
-        .form-grid {
+        .calc-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group {
@@ -147,152 +112,731 @@
         }
 
         .form-group label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #4a5568;
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
         }
 
         .form-group input, .form-group select {
-            padding: 8px 12px;
-            border: 1px solid #cbd5e0;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 14px;
             outline: none;
+            background-color: #fff;
+            transition: all 0.2s ease;
         }
 
         .form-group input:focus, .form-group select:focus {
-            border-color: #1a56db;
+            background-color: #fff9c4 !important;
+            border-color: #d97706 !important;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
         .btn-calc {
             width: 100%;
-            padding: 12px;
-            background-color: #1a56db;
+            padding: 11px;
+            background-color: #0284c7;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
+            font-size: 14px;
             font-weight: bold;
-            font-size: 0.95rem;
             cursor: pointer;
-            text-transform: uppercase;
             transition: background-color 0.2s;
         }
 
         .btn-calc:hover {
-            background-color: #0d3b85;
+            background-color: #0369a1;
         }
 
-        /* FOOTER */
-        .footer {
-            padding: 12px 20px;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            color: #718096;
-            background-color: #f8fafc;
-            flex-wrap: wrap;
-            gap: 10px;
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-left: 4px solid #0284c7;
+            border-radius: 4px;
+            display: none;
         }
 
-        .footer-right {
+        .result-box.danger-box {
+            background-color: #fef2f2;
+            border-left-color: #dc2626;
+        }
+
+        .result-box.warning-box {
+            background-color: #fffbe3;
+            border-left-color: #d97706;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .result-value {
             font-weight: bold;
-            color: #0d3b85;
+            color: #d97706;
         }
 
-        /* MOBILE RESPONSIVE */
-        @media (max-width: 600px) {
-            .header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .header-spacer {
-                display: none;
-            }
-            .tab-btn {
-                min-width: 100%;
-                border-radius: 6px;
-            }
+        .result-value-loss {
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .advice-item {
+            font-size: 13.5px;
+            padding-top: 8px;
+            border-top: 1px dashed #bae6fd;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .danger-box .advice-item {
+            border-top-color: #fca5a5;
+        }
+
+        .warning-box .advice-item {
+            border-top-color: #fde68a;
+        }
+
+        .spec-compare-box {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            padding: 10px 12px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .spec-title {
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+            color: #334155;
+        }
+
+        .spec-grid div span {
+            font-weight: bold;
+            color: #0284c7;
+        }
+
+        .lookup-view {
+            display: block;
+        }
+
+        .sub-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sub-controls label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #005a36;
+        }
+
+        .sub-btn {
+            padding: 6px 14px;
+            border: 1px solid #005a36;
+            background-color: #fff;
+            color: #005a36;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .sub-btn.active {
+            background-color: #fff9c4 !important;
+            color: #b91c1c !important;
+            border: 1px solid #d97706 !important;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px 10px 35px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            background-color: #fff9c4 !important;
+            border-color: #d97706 !important;
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        .info-note {
+            padding: 10px 15px;
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            font-size: 13px;
+            color: #555;
+            font-style: italic;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 500px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            text-align: center;
+            table-layout: fixed;
+        }
+
+        th:nth-child(1), td:nth-child(1) { width: 13%; }
+        th:nth-child(2), td:nth-child(2) { width: 13%; }
+        th:nth-child(3), td:nth-child(3) { width: 15%; }
+        th:nth-child(4), td:nth-child(4) { width: 15%; }
+        th:nth-child(5), td:nth-child(5) { width: 15%; }
+        th:nth-child(6), td:nth-child(6) { width: 15%; }
+        th:nth-child(7), td:nth-child(7) { width: 14%; }
+
+        th {
+            background-color: #005a36;
+            color: white;
+            padding: 10px 4px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-weight: 600;
+            border: 1px solid #004428;
+            vertical-align: middle;
+            line-height: 1.3;
+        }
+
+        td {
+            padding: 9px 6px;
+            border: 1px solid #e0e0e0;
+            color: #333;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #eaf4ed;
+        }
+
+        tr.selected-row {
+            background-color: #fff9c4 !important;
+            font-weight: bold;
+        }
+
+        tr.selected-row td {
+            color: #d32f2f !important;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: right;
+            padding: 10px 15px;
+            font-size: 12px;
+            color: #777;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- HEADER -->
     <div class="header">
-        <div class="header-logo-container">
-            <!-- Thay đường dẫn hình ảnh logo thực tế vào thuộc tính src -->
-            <img src="logo.png" alt="Logo" class="header-logo-img">
-        </div>
-        <div class="header-title">Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước</div>
-        <div class="header-spacer"></div>
+        Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
     </div>
 
-    <!-- TABS NAVIGATION -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab(event, 'tab-catalog')">DANH MỤC THIẾT BỊ</button>
-        <button class="tab-btn" onclick="switchTab(event, 'tab-calc')">TÍNH TOÁN THIẾT KẾ</button>
-    </div>
-
-    <!-- TAB 1: DANH MỤC THIẾT BỊ -->
-    <div id="tab-catalog" class="tab-content active">
-        <div class="content-box">
-            <div class="content-title">Danh Mục Vật Tư & Thiết Bị Đồng Hồ Nước</div>
-            <p style="font-size: 0.9rem; color: #4a5568;">Nội dung tra cứu thông số kỹ thuật và danh mục thiết bị hiển thị tại đây.</p>
+    <div class="main-controls">
+        <div class="tab-group">
+            <button class="tab-btn" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
+            <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
+            <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
+            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">📊 4. Tính Sai Số & Tổn Thất Áp Lực</button>
         </div>
     </div>
 
-    <!-- TAB 2: TÍNH TOÁN THIẾT KẾ -->
-    <div id="tab-calc" class="tab-content">
-        <div class="content-box">
-            <div class="content-title">Thông Số Tính Toán Chọn Đồng Hồ Nước</div>
-            <div class="form-grid">
+    <!-- TAB TÍNH TOÁN SAI SỐ & CẢNH BÁO THỦY LỰC -->
+    <div class="calc-view" id="calcView">
+        <div class="calc-card">
+            <h3>Công Cụ Tính Toán Vận Tốc, Sai Số & Cảnh Báo Bất Thường Thủy Lực</h3>
+            <div class="calc-grid">
                 <div class="form-group">
-                    <label for="qn">Lưu lượng danh định Qn (m³/h):</label>
-                    <input type="number" id="qn" placeholder="Nhập Qn...">
+                    <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
+                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 1500" onfocus="this.select()" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="qmax">Lưu lượng lớn nhất Qmax (m³/h):</label>
-                    <input type="number" id="qmax" placeholder="Nhập Qmax...">
+                    <label for="diameter">Đường kính ống DN (mm):</label>
+                    <input type="number" id="diameter" placeholder="Ví dụ: 500" onfocus="this.select()" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="dn">Đường kính ống (mm):</label>
-                    <select id="dn">
-                        <option value="15">DN15</option>
-                        <option value="20">DN20</option>
-                        <option value="25">DN25</option>
-                        <option value="40">DN40</option>
-                        <option value="50">DN50</option>
+                    <label for="meterType">Loại đồng hồ dự kiến:</label>
+                    <select id="meterType" onfocus="this.select()">
+                        <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
+                        <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
+                        <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C - Woltman)</option>
                     </select>
                 </div>
             </div>
-            <button class="btn-calc">Tính Toán Kích Thước Đồng Hồ</button>
+
+            <button class="btn-calc" onclick="tinhToanThuyLuc()">TÍNH TOÁN KẾT QUẢ & KIỂM TRA CẢNH BÁO</button>
+
+            <div id="resultBox" class="result-box">
+                <div class="result-grid">
+                    <div class="result-item">Vận tốc dòng chảy (v): <span id="resVelocity" class="result-value">0</span> m/s</div>
+                    <div class="result-item">Giới hạn sai số sơ bộ (MPE): <span id="resError" class="result-value">0</span></div>
+                    <div class="result-item">Tổn thất áp lực (ΔP): <span id="resLossHead" class="result-value-loss">0</span> mH₂O (<span id="resLossBar" class="result-value-loss">0</span> bar)</div>
+                </div>
+                
+                <div class="advice-item">
+                    Trạng thái & Cảnh báo kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
+                </div>
+
+                <div class="spec-compare-box">
+                    <div class="spec-title">THÔNG SỐ KỸ THUẬT & SAI SỐ CƠ BẢN THIẾT BỊ ĐƯỢC CHỌN (CHUẨN HÃNG / ISO 4064):</div>
+                    <div class="spec-grid">
+                        <div>Dải vận tốc chuẩn: <span id="specVelRange">-</span></div>
+                        <div>Sai số Vùng Trên (Q₂ - Q₄): <span id="specUpperErr">-</span></div>
+                        <div>Sai số Vùng Dưới (Q₁ - Q₂): <span id="specLowerErr">-</span></div>
+                        <div>Vận tốc tối đa cho phép (v<sub>max</sub>): <span id="specMaxVel" style="color: #dc2626;">-</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
+    <!-- TAB TRA CỨU DANH MỤC -->
+    <div class="lookup-view" id="lookupView">
+        <div style="padding: 0 15px 15px 15px;">
+            <div class="sub-controls" id="mechanical-sub-controls" style="display: none;">
+                <label>Chọn Cấp Đồng Hồ:</label>
+                <button class="sub-btn active" id="btn-cap-b" onclick="switchClass('B')">Cấp B</button>
+                <button class="sub-btn" id="btn-cap-c" onclick="switchClass('C')">Cấp C</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" onkeyup="filterTable()" onfocus="this.select()" placeholder="Nhập Kích cỡ (DN15, DN50...), áp lực hoặc thông số để lọc...">
+            </div>
+        </div>
+
+        <div class="info-note" id="infoNote">
+            📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h
+        </div>
+
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead>
+                    <tr id="tableHeader"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="footer">
-        <div>Hệ Thống Hỗ Trợ Thiết Kế & Chọn Thiết Bị</div>
-        <div class="footer-right">HueWACO</div>
+        Dữ liệu tra cứu & hỗ trợ thiết kế thủy lực © 2026
     </div>
 </div>
 
 <script>
-    function switchTab(evt, tabId) {
-        const tabContents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < tabContents.length; i++) {
-            tabContents[i].classList.remove("active");
-        }
+    const dataMag8000 = [
+        { dn: "DN25", inch: '1"', q1: "0.05", q2: "0.08", q3: "4", q4: "5", pn: "PN16" },
+        { dn: "DN40", inch: '1 1/2"', q1: "0.125", q2: "0.2", q3: "10", q4: "12.5", pn: "PN16" },
+        { dn: "DN50", inch: '2"', q1: "0.2", q2: "0.32", q3: "16", q4: "20", pn: "PN16" },
+        { dn: "DN65", inch: '2 1/2"', q1: "0.313", q2: "0.5", q3: "25", q4: "31.25", pn: "PN16" },
+        { dn: "DN80", inch: '3"', q1: "0.5", q2: "0.8", q3: "40", q4: "50", pn: "PN16" },
+        { dn: "DN100", inch: '4"', q1: "0.788", q2: "1.26", q3: "63", q4: "78.75", pn: "PN16" },
+        { dn: "DN125", inch: '5"', q1: "1.25", q2: "2", q3: "100", q4: "125", pn: "PN16" },
+        { dn: "DN150", inch: '6"', q1: "2", q2: "3.2", q3: "160", q4: "200", pn: "PN16" },
+        { dn: "DN200", inch: '8"', q1: "3.125", q2: "5", q3: "250", q4: "312.5", pn: "PN16" },
+        { dn: "DN250", inch: '10"', q1: "5", q2: "8", q3: "400", q4: "500", pn: "PN16" },
+        { dn: "DN300", inch: '12"', q1: "7.875", q2: "12.6", q3: "630", q4: "787.5", pn: "PN16" },
+        { dn: "DN350", inch: '14"', q1: "12.5", q2: "20", q3: "1000", q4: "1250", pn: "PN16" },
+        { dn: "DN400", inch: '16"', q1: "12.5", q2: "20", q3: "1000", q4: "1250", pn: "PN16" },
+        { dn: "DN500", inch: '20"', q1: "20", q2: "32", q3: "1600", q4: "2000", pn: "PN16" },
+        { dn: "DN600", inch: '24"', q1: "31.25", q2: "50", q3: "2500", q4: "3125", pn: "PN16" },
+        { dn: "DN700", inch: '28"', q1: "50", q2: "80", q3: "4000", q4: "5000", pn: "PN16" },
+        { dn: "DN800", inch: '32"', q1: "50", q2: "80", q3: "4000", q4: "5000", pn: "PN16" },
+        { dn: "DN900", inch: '36"', q1: "78.75", q2: "126", q3: "6300", q4: "7875", pn: "PN16" },
+        { dn: "DN1000", inch: '40"', q1: "78.75", q2: "126", q3: "6300", q4: "7875", pn: "PN16" },
+        { dn: "DN1200", inch: '48"', q1: "125", q2: "200", q3: "10000", q4: "12500", pn: "PN16" }
+    ];
 
-        const tabBtns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < tabBtns.length; i++) {
-            tabBtns[i].classList.remove("active");
-        }
+    const dataMag5000 = [
+        { dn: "DN15", inch: '1/2"', q1: "0.016", q2: "0.025", q3: "2.5", q4: "3.125", pn: "PN40" },
+        { dn: "DN25", inch: '1"', q1: "0.04", q2: "0.064", q3: "10", q4: "12.5", pn: "PN40" },
+        { dn: "DN40", inch: '1 1/2"', q1: "0.10", q2: "0.16", q3: "25", q4: "31.25", pn: "PN40" },
+        { dn: "DN50", inch: '2"', q1: "0.16", q2: "0.25", q3: "40", q4: "50", pn: "PN16" },
+        { dn: "DN80", inch: '3"', q1: "0.40", q2: "0.64", q3: "100", q4: "125", pn: "PN16" },
+        { dn: "DN100", inch: '4"', q1: "0.63", q2: "1.00", q3: "160", q4: "200", pn: "PN16" },
+        { dn: "DN150", inch: '6"', q1: "1.60", q2: "2.50", q3: "400", q4: "500", pn: "PN16" },
+        { dn: "DN200", inch: '8"', q1: "2.50", q2: "4.00", q3: "630", q4: "787.5", pn: "PN16" },
+        { dn: "DN250", inch: '10"', q1: "4.00", q2: "6.40", q3: "1000", q4: "1250", pn: "PN16" },
+        { dn: "DN300", inch: '12"', q1: "6.30", q2: "10.0", q3: "1600", q4: "2000", pn: "PN16" },
+        { dn: "DN400", inch: '16"', q1: "10.0", q2: "16.0", q3: "2500", q4: "3125", pn: "PN16" },
+        { dn: "DN500", inch: '20"', q1: "16.0", q2: "25.0", q3: "4000", q4: "5000", pn: "PN16" },
+        { dn: "DN600", inch: '24"', q1: "25.0", q2: "40.0", q3: "6300", q4: "7875", pn: "PN16" }
+    ];
 
-        document.getElementById(tabId).classList.add("active");
-        evt.currentTarget.classList.add("active");
+    const dataCoKhiB = [
+        { dn: "DN15", inch: '1/2"', qmin: "0.03", qt: "0.12", qn: "1.5", qmax: "3.0", pn: "PN10/16" },
+        { dn: "DN20", inch: '3/4"', qmin: "0.05", qt: "0.20", qn: "2.5", qmax: "5.0", pn: "PN10/16" },
+        { dn: "DN25", inch: '1"', qmin: "0.07", qt: "0.28", qn: "3.5", qmax: "7.0", pn: "PN10/16" },
+        { dn: "DN40", inch: '1 1/2"', qmin: "0.20", qt: "0.80", qn: "10.0", qmax: "20.0", pn: "PN10/16" },
+        { dn: "DN50", inch: '2"', qmin: "0.45", qt: "1.80", qn: "15.0", qmax: "30.0", pn: "PN10/16" },
+        { dn: "DN80", inch: '3"', qmin: "1.20", qt: "4.80", qn: "40.0", qmax: "80.0", pn: "PN10/16" },
+        { dn: "DN100", inch: '4"', qmin: "1.80", qt: "7.20", qn: "60.0", qmax: "120.0", pn: "PN10/16" },
+        { dn: "DN150", inch: '6"', qmin: "4.50", qt: "18.0", qn: "150.0", qmax: "300.0", pn: "PN10/16" },
+        { dn: "DN200", inch: '8"', qmin: "7.50", qt: "30.0", qn: "250.0", qmax: "500.0", pn: "PN10/16" }
+    ];
+
+    const dataCoKhiC = [
+        { dn: "DN15", inch: '1/2"', qmin: "0.015", qt: "0.0225", qn: "1.5", qmax: "3.0", pn: "PN10/16" },
+        { dn: "DN20", inch: '3/4"', qmin: "0.025", qt: "0.0375", qn: "2.5", qmax: "5.0", pn: "PN10/16" },
+        { dn: "DN25", inch: '1"', qmin: "0.035", qt: "0.0525", qn: "3.5", qmax: "7.0", pn: "PN10/16" },
+        { dn: "DN40", inch: '1 1/2"', qmin: "0.100", qt: "0.1500", qn: "10.0", qmax: "20.0", pn: "PN10/16" },
+        { dn: "DN50", inch: '2"', qmin: "0.225", qt: "0.3375", qn: "15.0", qmax: "30.0", pn: "PN10/16" }
+    ];
+
+    let currentCategory = 'mag8000';
+    let currentClass = 'B';
+
+    function switchCategory(cat) {
+        currentCategory = cat;
+        localStorage.setItem('activeWaterMeterTab', cat);
+
+        // Reset trạng thái active của tất cả các tab
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+        // Highlight đúng tab được kích hoạt
+        if (cat === 'mag8000') document.getElementById('btn-pin').classList.add('active');
+        if (cat === 'mag5000') document.getElementById('btn-dien').classList.add('active');
+        if (cat === 'co_khi') document.getElementById('btn-co-khi').classList.add('active');
+        if (cat === 'tinh_sai_so') document.getElementById('btn-tinh-sai-so').classList.add('active');
+
+        const calcView = document.getElementById('calcView');
+        const lookupView = document.getElementById('lookupView');
+        const subCtrl = document.getElementById('mechanical-sub-controls');
+
+        if (cat === 'tinh_sai_so') {
+            calcView.style.display = 'block';
+            lookupView.style.display = 'none';
+        } else {
+            calcView.style.display = 'none';
+            lookupView.style.display = 'block';
+            subCtrl.style.display = (cat === 'co_khi') ? 'flex' : 'none';
+
+            updateBanner();
+            renderTable();
+        }
     }
+
+    function switchClass(cls) {
+        currentClass = cls;
+        document.getElementById('btn-cap-b').classList.toggle('active', cls === 'B');
+        document.getElementById('btn-cap-c').classList.toggle('active', cls === 'C');
+        
+        updateBanner();
+        renderTable();
+    }
+
+    function updateBanner() {
+        const info = document.getElementById('infoNote');
+        if (currentCategory === 'mag8000') {
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h`;
+        } else if (currentCategory === 'mag5000') {
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 5000 (Điện Lưới 220V/24V) | Bộ truyền tín hiệu chính xác cao | Đơn vị: m³/h`;
+        } else if (currentCategory === 'co_khi') {
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> Đồng hồ nước Cơ khí - <strong>Cấp ${currentClass}</strong> (Theo tiêu chuẩn ISO 4064 / TCVN 5621) | Đơn vị: m³/h`;
+        }
+    }
+
+    function renderTable() {
+        const thead = document.getElementById('tableHeader');
+        const tbody = document.getElementById('tableBody');
+        
+        thead.innerHTML = '';
+        tbody.innerHTML = '';
+
+        let data = [];
+        let headers = [];
+
+        if (currentCategory === 'mag8000' || currentCategory === 'mag5000') {
+            headers = [
+                'Kích cỡ<br>(DN)', 
+                'Tương ứng<br>(Inch)', 
+                'Lưu lượng<br>tối thiểu (Q<sub>1</sub>)', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)', 
+                'Lưu lượng<br>danh định (Q<sub>3</sub>)', 
+                'Lưu lượng<br>quá tải (Q<sub>4</sub>)', 
+                'Áp lực<br>làm việc'
+            ];
+            data = (currentCategory === 'mag8000') ? dataMag8000 : dataMag5000;
+
+            headers.forEach(h => {
+                let th = document.createElement('th');
+                th.innerHTML = h;
+                thead.appendChild(th);
+            });
+
+            data.forEach(row => {
+                let tr = document.createElement('tr');
+                tr.onclick = function() { selectRow(this); };
+                tr.innerHTML = `
+                    <td class="text-bold">${row.dn}</td>
+                    <td>${row.inch}</td>
+                    <td>${row.q1}</td>
+                    <td>${row.q2}</td>
+                    <td>${row.q3}</td>
+                    <td>${row.q4}</td>
+                    <td>${row.pn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } else if (currentCategory === 'co_khi') {
+            headers = [
+                'Kích cỡ<br>(DN)', 
+                'Tương ứng<br>(Inch)', 
+                'Lưu lượng<br>tối thiểu (Q<sub>min</sub>)', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>t</sub>)', 
+                'Lưu lượng<br>danh định (Q<sub>n</sub>)', 
+                'Lưu lượng<br>tối đa (Q<sub>max</sub>)', 
+                'Áp lực<br>làm việc'
+            ];
+            data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
+
+            headers.forEach(h => {
+                let th = document.createElement('th');
+                th.innerHTML = h;
+                thead.appendChild(th);
+            });
+
+            data.forEach(row => {
+                let tr = document.createElement('tr');
+                tr.onclick = function() { selectRow(this); };
+                tr.innerHTML = `
+                    <td class="text-bold">${row.dn}</td>
+                    <td>${row.inch}</td>
+                    <td>${row.qmin}</td>
+                    <td>${row.qt}</td>
+                    <td>${row.qn}</td>
+                    <td>${row.qmax}</td>
+                    <td>${row.pn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        filterTable();
+    }
+
+    function selectRow(row) {
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach(r => r.classList.remove('selected-row'));
+        row.classList.add('selected-row');
+    }
+
+    function filterTable() {
+        const filter = document.getElementById('searchInput').value.toUpperCase();
+        const trs = document.getElementById('tableBody').getElementsByTagName('tr');
+
+        for (let i = 0; i < trs.length; i++) {
+            let rowText = trs[i].textContent || trs[i].innerText;
+            if (rowText.toUpperCase().indexOf(filter) > -1) {
+                trs[i].style.display = "";
+            } else {
+                trs[i].style.display = "none";
+            }
+        }
+    }
+
+    function tinhToanThuyLuc() {
+        const Q = parseFloat(document.getElementById('flowrate').value);
+        const D = parseFloat(document.getElementById('diameter').value);
+        const type = document.getElementById('meterType').value;
+        
+        if (isNaN(Q) || isNaN(D) || Q <= 0 || D <= 0) {
+            alert("Vui lòng nhập giá trị Lưu lượng và Đường kính hợp lệ lớn hơn 0.");
+            return;
+        }
+
+        const v = (4 * Q) / (Math.PI * Math.pow(D / 1000, 2) * 3600);
+        let mpe = 0;
+        let deltaP_mH2O = 0;
+        let advice = "";
+        let color = "#16a34a";
+        let statusClass = ""; 
+
+        const specVelRange = document.getElementById('specVelRange');
+        const specUpperErr = document.getElementById('specUpperErr');
+        const specLowerErr = document.getElementById('specLowerErr');
+        const specMaxVel = document.getElementById('specMaxVel');
+
+        if (type === "mag5000" || type === "mag8000") {
+            deltaP_mH2O = 0.15 * (Math.pow(v, 2) / (2 * 9.81));
+            
+            if (type === "mag5000") {
+                specVelRange.innerText = "0.5 ÷ 10.0 m/s";
+                specUpperErr.innerText = "± 0.40 %";
+                specLowerErr.innerText = "± 0.50 %";
+                specMaxVel.innerText = "10.0 m/s";
+
+                if (v > 10.0) {
+                    statusClass = "danger-box";
+                    mpe = NaN;
+                    advice = "🚨 CẢNH BÁO NGUY HIỂM (v > 10.0 m/s): Vận tốc vượt ngưỡng kỹ thuật tối đa. Nguy cơ XÂM THỰC (cavitation) gây hư hỏng lớp lót lòng ống (Liner) bất kể đường kính ống và gây bão hòa tín hiệu đo.";
+                    color = "#dc2626";
+                } else if (v >= 0.5) {
+                    mpe = 0.4;
+                    advice = "Vận hành tối ưu: Dải vận tốc và cột áp tổn thất đạt tiêu chuẩn kỹ thuật Siemens MAG 5000.";
+                } else if (v >= 0.1) {
+                    statusClass = "warning-box";
+                    mpe = 0.1 + (0.15 / v);
+                    advice = "⚠️ CẢNH BÁO VẬN TỐC THẤP (v < 0.5 m/s): Tín hiệu cảm ứng điện từ yếu (dễ lẫn nhiễu). Nên cân nhắc thu hẹp đường kính ống tại vị trí đặt cảm biến để tăng vận tốc.";
+                    color = "#d97706";
+                } else {
+                    statusClass = "danger-box";
+                    mpe = 0.1 + (0.15 / v);
+                    advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Vận tốc quá thấp (< 0.1 m/s). Nhiễu tín hiệu đáy vượt ngưỡng cho phép, sai số tăng vọt.";
+                    color = "#dc2626";
+                }
+            } else {
+                specVelRange.innerText = "0.5 ÷ 10.0 m/s";
+                specUpperErr.innerText = "± 0.50 %";
+                specLowerErr.innerText = "± 0.80 %";
+                specMaxVel.innerText = "10.0 m/s";
+
+                if (v > 10.0) {
+                    statusClass = "danger-box";
+                    mpe = NaN;
+                    advice = "🚨 CẢNH BÁO NGUY HIỂM (v > 10.0 m/s): Vận tốc vượt dải đo max của Siemens MAG 8000. Nguy cơ XÂM THỰC (cavitation) phá hỏng lớp lót lòng ống (Liner) và suy giảm tuổi thọ pin nhanh chóng.";
+                    color = "#dc2626";
+                } else if (v >= 0.5) {
+                    mpe = 0.5;
+                    advice = "Vận hành tối ưu: Dải vận tốc đạt chuẩn thiết bị điện từ chạy pin.";
+                } else if (v >= 0.015) {
+                    statusClass = "warning-box";
+                    mpe = 0.4 + (0.2 / v);
+                    advice = "⚠️ CẢNH BÁO VẬN TỐC THẤP (v < 0.5 m/s): Tín hiệu cảm ứng điện từ yếu (dễ lẫn nhiễu dòng xoáy).";
+                    color = "#d97706";
+                } else {
+                    statusClass = "danger-box";
+                    mpe = 0.4 + (0.2 / v);
+                    advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Vận tốc rơi vào vùng điểm chết cảm biến (< 15 mm/s). Đồng hồ không thể ghi nhận lưu lượng.";
+                    color = "#dc2626";
+                }
+            }
+        } 
+        else if (type === "mechanical") {
+            let Q3_estimate = 3500 * Math.PI * Math.pow(D / 1000, 2) / 4;
+            deltaP_mH2O = 6.3 * Math.pow(Q / Q3_estimate, 2);
+
+            specVelRange.innerText = "0.3 ÷ 2.5 m/s";
+            specUpperErr.innerText = "± 2.00 %";
+            specLowerErr.innerText = "± 5.00 %";
+            specMaxVel.innerText = "3.0 m/s";
+
+            if (v > 3.0 || deltaP_mH2O > 6.3) {
+                statusClass = "danger-box";
+                mpe = NaN;
+                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ (bất kể DN50 hay DN500). Vi phạm TCVN 8783 / ISO 4064!";
+                color = "#dc2626";
+            } else if (v >= 0.03) {
+                mpe = 2.0;
+                advice = "Vận hành ổn định: Đồng hồ cơ chạy trong dải lưu lượng danh định (Q2 đến Q3).";
+            } else if (v >= 0.015) {
+                statusClass = "warning-box";
+                mpe = 5.0;
+                advice = "⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP (Q1 đến Q2): Sai số đo tăng lên ±5.0%, nguy cơ thất thoát thương mại.";
+                color = "#d97706";
+            } else {
+                statusClass = "danger-box";
+                mpe = 100;
+                advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Hiện tượng 'Chết đồng hồ cơ học'. Nước chảy qua nhưng không đủ lực thắng ma sát tua-bin (Kim không quay).";
+                color = "#dc2626";
+            }
+        }
+
+        const deltaP_bar = deltaP_mH2O * 0.0980665;
+
+        document.getElementById('resVelocity').innerText = v.toFixed(3);
+        document.getElementById('resLossHead').innerText = deltaP_mH2O.toFixed(2);
+        document.getElementById('resLossBar').innerText = deltaP_bar.toFixed(3);
+        
+        const resultBox = document.getElementById('resultBox');
+        resultBox.className = "result-box " + statusClass;
+
+        if (statusClass === "danger-box") {
+            document.getElementById('resError').innerText = "VƯỢT GIỚI HẠN KỸ THUẬT";
+        } else {
+            if (type === "mechanical" && v < 0.015) {
+                document.getElementById('resError').innerText = "-100% (Không quay)";
+            } else {
+                document.getElementById('resError').innerText = "± " + mpe.toFixed(2) + " %";
+            }
+        }
+        
+        const adviceSpan = document.getElementById('resAdvice');
+        adviceSpan.innerText = advice;
+        adviceSpan.style.color = color;
+        
+        resultBox.style.display = 'block';
+    }
+
+    // Tải tab đã lưu trước đó khi khởi chạy / F5
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedTab = localStorage.getItem('activeWaterMeterTab') || 'mag8000';
+        switchCategory(savedTab);
+    });
 </script>
 
 </body>
