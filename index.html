@@ -347,11 +347,6 @@
             line-height: 1.3;
         }
 
-        th sub {
-            font-size: 10px;
-            bottom: -0.2em;
-        }
-
         td {
             padding: 9px 6px;
             border: 1px solid #e0e0e0;
@@ -401,10 +396,10 @@
 
     <div class="main-controls">
         <div class="tab-group">
-            <button class="tab-btn active" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
+            <button class="tab-btn" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
             <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
             <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
-            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số & Cảnh Báo Thủy Lực</button>
+            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">📊 4. Tính Sai Số & Tổn Thất Áp Lực</button>
         </div>
     </div>
 
@@ -557,11 +552,16 @@
 
     function switchCategory(cat) {
         currentCategory = cat;
-        
-        document.getElementById('btn-pin').classList.toggle('active', cat === 'mag8000');
-        document.getElementById('btn-dien').classList.toggle('active', cat === 'mag5000');
-        document.getElementById('btn-co-khi').classList.toggle('active', cat === 'co_khi');
-        document.getElementById('btn-tinh-sai-so').classList.toggle('active', cat === 'tinh_sai_so');
+        localStorage.setItem('activeWaterMeterTab', cat);
+
+        // Reset trạng thái active của tất cả các tab
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+        // Highlight đúng tab được kích hoạt
+        if (cat === 'mag8000') document.getElementById('btn-pin').classList.add('active');
+        if (cat === 'mag5000') document.getElementById('btn-dien').classList.add('active');
+        if (cat === 'co_khi') document.getElementById('btn-co-khi').classList.add('active');
+        if (cat === 'tinh_sai_so') document.getElementById('btn-tinh-sai-so').classList.add('active');
 
         const calcView = document.getElementById('calcView');
         const lookupView = document.getElementById('lookupView');
@@ -832,7 +832,11 @@
         resultBox.style.display = 'block';
     }
 
-    switchCategory('mag8000');
+    // Tải tab đã lưu trước đó khi khởi chạy / F5
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedTab = localStorage.getItem('activeWaterMeterTab') || 'mag8000';
+        switchCategory(savedTab);
+    });
 </script>
 
 </body>
