@@ -72,7 +72,7 @@
             background-color: #e2e8f0;
         }
 
-        /* TAB KHI ĐƯỢC CHỌN - SHADE MÀU VÀNG NHẠT TOÀN BỘ BUTTON */
+        /* TAB KHI ĐƯỢC CHỌN - NỀN VÀNG NHẠT */
         .tab-btn.active {
             background-color: #fff9c4 !important;
             color: #b91c1c !important;
@@ -131,7 +131,7 @@
             transition: all 0.2s ease;
         }
 
-        /* NỀN VÀNG NHẠT + VIỀN ĐẬM KHI CLICK CHỌN Ô NHẬP DỮ LIỆU */
+        /* NỀN VÀNG NHẠT KHI CLICK CHỌN Ô NHẬP DỮ LIỆU */
         .form-group input:focus, .form-group select:focus {
             background-color: #fff9c4 !important;
             border-color: #d97706 !important;
@@ -198,7 +198,7 @@
             border-top-color: #fca5a5;
         }
 
-        /* KHU VỰC THÔNG SỐ SO SÁNH TIÊU CHUẨN KỸ THUẬT */
+        /* THÔNG SỐ SO SÁNH TIÊU CHUẨN KỸ THUẬT */
         .spec-compare-box {
             background-color: #ffffff;
             border: 1px solid #cbd5e1;
@@ -439,14 +439,14 @@
                     Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
                 </div>
 
-                <!-- KHU VỰC THÔNG SỐ KỸ THUẬT TIÊU CHUẨN LOẠI BỎ KÝ TỰ THỪA -->
+                <!-- KHU VỰC THÔNG SỐ KỸ THUẬT VỚI V_MAX ĐƯỢC ĐẶT SUB -->
                 <div class="spec-compare-box">
                     <div class="spec-title">THÔNG SỐ KỸ THUẬT & SAI SỐ CƠ BẢN THIẾT BỊ ĐƯỢC CHỌN (CHUẨN HÃNG / ISO 4064):</div>
                     <div class="spec-grid">
                         <div>Dải vận tốc chuẩn: <span id="specVelRange">-</span></div>
                         <div>Sai số Vùng Trên (Q₂ - Q₄): <span id="specUpperErr">-</span></div>
                         <div>Sai số Vùng Dưới (Q₁ - Q₂): <span id="specLowerErr">-</span></div>
-                        <div>Vận tốc tối đa cho phép (v_max): <span id="specMaxVel" style="color: #dc2626;">-</span></div>
+                        <div>Vận tốc tối đa cho phép (v<sub>max</sub>): <span id="specMaxVel" style="color: #dc2626;">-</span></div>
                     </div>
                 </div>
             </div>
@@ -693,7 +693,6 @@
         }
     }
 
-    // --- TÍNH TOÁN SAI SỐ SƠ BỘ VÀ HIỂN THỊ THÔNG SỐ SO SÁNH ---
     function tinhToanSaiSo() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
@@ -770,7 +769,7 @@
             if (v > 3.0) {
                 isOverSpeed = true;
                 mpe = NaN;
-                advice = "🚨 CẢNH BÁO VI PHẠM TCVN 8783 / ISO 4064 (v > 3.0 m/s): Lưu lượng vượt ngưỡng quá tải Q4/Qmax. Nguy cơ làm hỏng cơ cấu truyền động cánh quạt, mòn mòn mố gối đỡ và gây sụt áp > 0.63 bar.";
+                advice = "🚨 CẢNH BÁO VI PHẠM TCVN 8783 / ISO 4064 (v > 3.0 m/s): Lưu lượng vượt ngưỡng quá tải Q4/Qmax. Nguy cơ làm hỏng cơ cấu truyền động cánh quạt, mòn mố gối đỡ và gây sụt áp > 0.63 bar.";
                 color = "#dc2626";
             } else if (v >= 0.03) {
                 mpe = 2.0;
