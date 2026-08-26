@@ -29,7 +29,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        /* HEADER TỐI ƯU HIỂN THỊ CHUẨN TRÊN CẢ ĐIỆN THOẠI VÀ WEB */
+        /* HEADER */
         .header {
             background-color: #0d3b85;
             color: #ffffff;
@@ -69,15 +69,15 @@
         }
 
         .header-spacer {
-            width: 120px; /* Cân bằng khoảng cách với Logo */
+            width: 120px;
         }
 
-        /* TABS MỤC CHỌN VỚI GIAO DIỆN CẢI TIẾN GỌN GÀNG */
+        /* TABS NAVIGATION */
         .nav-tabs {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            padding: 15px 15px 5px 15px;
+            padding: 15px 15px 0 15px;
             background: #ffffff;
             border-bottom: 2px solid #e2e8f0;
         }
@@ -88,6 +88,7 @@
             padding: 10px 16px;
             background-color: #f8f9fa;
             border: 1px solid #cbd5e0;
+            border-bottom: none;
             border-radius: 6px 6px 0 0;
             font-size: 0.9rem;
             font-weight: 600;
@@ -106,7 +107,6 @@
             background-color: #0d3b85;
             border-color: #0d3b85;
             color: #ffffff;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
         }
 
         .tab-content {
@@ -117,7 +117,7 @@
             display: block;
         }
 
-        /* NỘI DUNG TÍNH TOÁN */
+        /* CONTENT AREA */
         .content-box {
             margin: 15px;
             padding: 20px;
@@ -175,6 +175,7 @@
             font-size: 0.95rem;
             cursor: pointer;
             text-transform: uppercase;
+            transition: background-color 0.2s;
         }
 
         .btn-calc:hover {
@@ -199,7 +200,7 @@
             color: #0d3b85;
         }
 
-        /* CO DÃN TRÊN MÀN HÌNH NHỎ (ĐIỆN THOẠI) */
+        /* MOBILE RESPONSIVE */
         @media (max-width: 600px) {
             .header {
                 flex-direction: column;
@@ -221,7 +222,8 @@
     <!-- HEADER -->
     <div class="header">
         <div class="header-logo-container">
-            <img id="headerLogo" class="header-logo-img" alt="Logo">
+            <!-- Thay đường dẫn hình ảnh logo thực tế vào thuộc tính src -->
+            <img src="logo.png" alt="Logo" class="header-logo-img">
         </div>
         <div class="header-title">Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước</div>
         <div class="header-spacer"></div>
@@ -233,36 +235,30 @@
         <button class="tab-btn" onclick="switchTab(event, 'tab-calc')">TÍNH TOÁN THIẾT KẾ</button>
     </div>
 
-    <!-- TAB 1: DANH MỤC -->
+    <!-- TAB 1: DANH MỤC THIẾT BỊ -->
     <div id="tab-catalog" class="tab-content active">
         <div class="content-box">
-            <div class="content-title">Tải Tập Tin Excel Để Nhúng Hình Ảnh Tự Động</div>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="excelFile">Chọn file Excel (.xlsx, .xls):</label>
-                <input type="file" id="excelFile" accept=".xlsx, .xls" onchange="handleFileUpload(event)">
-            </div>
-            <div id="imageContainer" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 15px;">
-                <!-- Hình ảnh trích xuất từ file Excel sẽ hiển thị tại đây -->
-            </div>
+            <div class="content-title">Danh Mục Vật Tư & Thiết Bị Đồng Hồ Nước</div>
+            <p style="font-size: 0.9rem; color: #4a5568;">Nội dung tra cứu thông số kỹ thuật và danh mục thiết bị hiển thị tại đây.</p>
         </div>
     </div>
 
-    <!-- TAB 2: TÍNH TOÁN -->
+    <!-- TAB 2: TÍNH TOÁN THIẾT KẾ -->
     <div id="tab-calc" class="tab-content">
         <div class="content-box">
             <div class="content-title">Thông Số Tính Toán Chọn Đồng Hồ Nước</div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Lưu lượng danh định Qn (m³/h):</label>
-                    <input type="number" placeholder="Nhập Qn...">
+                    <label for="qn">Lưu lượng danh định Qn (m³/h):</label>
+                    <input type="number" id="qn" placeholder="Nhập Qn...">
                 </div>
                 <div class="form-group">
-                    <label>Lưu lượng lớn nhất Qmax (m³/h):</label>
-                    <input type="number" placeholder="Nhập Qmax...">
+                    <label for="qmax">Lưu lượng lớn nhất Qmax (m³/h):</label>
+                    <input type="number" id="qmax" placeholder="Nhập Qmax...">
                 </div>
                 <div class="form-group">
-                    <label>Đường kính ống (mm):</label>
-                    <select>
+                    <label for="dn">Đường kính ống (mm):</label>
+                    <select id="dn">
                         <option value="15">DN15</option>
                         <option value="20">DN20</option>
                         <option value="25">DN25</option>
@@ -282,11 +278,7 @@
     </div>
 </div>
 
-<!-- THƯ VIỆN ĐỌC FILE EXCEL & TRÍCH XUẤT HÌNH ẢNH -->
-<script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
-
 <script>
-    // Hàm chuyển đổi tab
     function switchTab(evt, tabId) {
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
@@ -300,60 +292,6 @@
 
         document.getElementById(tabId).classList.add("active");
         evt.currentTarget.classList.add("active");
-    }
-
-    // Hàm tự động đọc file Excel và trích xuất ảnh nhúng
-    async function handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const container = document.getElementById("imageContainer");
-        container.innerHTML = "Đang xử lý hình ảnh...";
-
-        try {
-            const workbook = new ExcelJS.Workbook();
-            const arrayBuffer = await file.arrayBuffer();
-            await workbook.xlsx.load(arrayBuffer);
-
-            container.innerHTML = "";
-            let imageCount = 0;
-
-            workbook.worksheets.forEach((worksheet) => {
-                const images = worksheet.getImages();
-                images.forEach((img) => {
-                    const media = workbook.model.media.find(m => m.index === img.imageId);
-                    if (media) {
-                        const base64String = btoa(
-                            new Uint8Array(media.buffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
-                        );
-                        const imgSrc = `data:image/${media.extension};base64,${base64String}`;
-
-                        // Đặt ảnh đầu tiên làm logo header nếu chưa có
-                        if (imageCount === 0) {
-                            document.getElementById("headerLogo").src = imgSrc;
-                        }
-
-                        // Hiển thị danh sách ảnh tìm được
-                        const imgElement = document.createElement("img");
-                        imgElement.src = imgSrc;
-                        imgElement.style.maxWidth = "200px";
-                        imgElement.style.border = "1px solid #dcdfe6";
-                        imgElement.style.borderRadius = "6px";
-                        imgElement.style.padding = "5px";
-
-                        container.appendChild(imgElement);
-                        imageCount++;
-                    }
-                });
-            });
-
-            if (imageCount === 0) {
-                container.innerHTML = "Không tìm thấy hình ảnh nhúng trong tập tin Excel.";
-            }
-        } catch (error) {
-            console.error(error);
-            container.innerHTML = "Lỗi khi đọc file Excel. Vui lòng kiểm tra lại định dạng file.";
-        }
     }
 </script>
 
