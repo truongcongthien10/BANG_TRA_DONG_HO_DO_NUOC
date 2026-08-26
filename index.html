@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Mục Thông Số Đồng Hồ Nước</title>
+    <title>Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước</title>
     <style>
         * {
             box-sizing: border-box;
@@ -40,13 +40,13 @@
             letter-spacing: 0.5px;
         }
 
+        /* DIEU KHIEN TAB CHINHI */
         .main-controls {
             padding: 15px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
             border-bottom: 1px solid #e0e0e0;
         }
 
-        /* Tối ưu thanh Tab danh mục */
         .tab-group {
             display: flex;
             gap: 10px;
@@ -55,8 +55,8 @@
         }
 
         .tab-btn {
-            flex: 1; /* Chiều rộng 3 nút tự động bằng nhau */
-            padding: 10px 15px;
+            flex: 1;
+            padding: 10px 12px;
             border: 1px solid #cccccc;
             background-color: #f1f3f5;
             color: #495057;
@@ -64,7 +64,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            font-size: 14px;
+            font-size: 13.5px;
             text-align: center;
         }
 
@@ -73,21 +73,131 @@
             border-color: #adb5bd;
         }
 
-        /* Style cho nút đang được chọn */
         .tab-btn.active {
-            background-color: #005a36; /* Xanh lá đậm đồng bộ với Header */
+            background-color: #005a36;
             color: #ffffff;
             border-color: #004428;
             box-shadow: 0 2px 4px rgba(0,0,0,0.12);
         }
 
-        /* Sub controls cho Cơ khí */
+        .tab-btn.calc-tab-btn.active {
+            background-color: #0284c7; /* Màu xanh biển nổi bật cho Tab tính toán */
+            border-color: #0369a1;
+        }
+
+        /* TAB TÍNH TOÁN SAI SỐ */
+        .calc-view {
+            padding: 20px;
+            background-color: #f8fafc;
+            display: none;
+        }
+
+        .calc-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .calc-card h3 {
+            color: #0284c7;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .form-group input, .form-group select {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #0284c7;
+        }
+
+        .btn-calc {
+            width: 100%;
+            padding: 10px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-calc:hover {
+            background-color: #0369a1;
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-left: 4px solid #0284c7;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .result-item {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .result-value {
+            font-weight: bold;
+            color: #d97706;
+        }
+
+        .advice-item {
+            font-size: 13.5px;
+            padding-top: 8px;
+            border-top: 1px dashed #bae6fd;
+        }
+
+        /* TAB BẢNG TRA CỨU */
+        .lookup-view {
+            display: block;
+        }
+
         .sub-controls {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 12px;
-            background: #fff;
+            background: #f8f9fa;
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #e0e0e0;
@@ -115,7 +225,6 @@
             color: #fff;
         }
 
-        /* Search Bar */
         .search-box {
             position: relative;
             width: 100%;
@@ -144,7 +253,6 @@
             opacity: 0.6;
         }
 
-        /* Info Banner */
         .info-note {
             padding: 10px 15px;
             background-color: #fff8e1;
@@ -154,10 +262,9 @@
             font-style: italic;
         }
 
-        /* Table Area */
         .table-wrapper {
             overflow-x: auto;
-            max-height: 550px;
+            max-height: 500px;
         }
 
         table {
@@ -168,14 +275,13 @@
             table-layout: fixed;
         }
 
-        /* Phân bổ tỷ lệ độ rộng các cột (7 cột) */
-        th:nth-child(1), td:nth-child(1) { width: 13%; } /* Kích cỡ */
-        th:nth-child(2), td:nth-child(2) { width: 13%; } /* Tương ứng */
-        th:nth-child(3), td:nth-child(3) { width: 15%; } /* Q1 / Qmin */
-        th:nth-child(4), td:nth-child(4) { width: 15%; } /* Q2 / Qt */
-        th:nth-child(5), td:nth-child(5) { width: 15%; } /* Q3 / Qn */
-        th:nth-child(6), td:nth-child(6) { width: 15%; } /* Q4 / Qmax */
-        th:nth-child(7), td:nth-child(7) { width: 14%; } /* Áp lực */
+        th:nth-child(1), td:nth-child(1) { width: 13%; }
+        th:nth-child(2), td:nth-child(2) { width: 13%; }
+        th:nth-child(3), td:nth-child(3) { width: 15%; }
+        th:nth-child(4), td:nth-child(4) { width: 15%; }
+        th:nth-child(5), td:nth-child(5) { width: 15%; }
+        th:nth-child(6), td:nth-child(6) { width: 15%; }
+        th:nth-child(7), td:nth-child(7) { width: 14%; }
 
         th {
             background-color: #005a36;
@@ -212,14 +318,13 @@
             background-color: #eaf4ed;
         }
 
-        /* Style cho DÒNG ĐƯỢC CHỌN (Highlight) */
         tr.selected-row {
-            background-color: #fff9c4 !important; /* Vàng nhạt */
+            background-color: #fff9c4 !important;
             font-weight: bold;
         }
 
         tr.selected-row td {
-            color: #d32f2f !important; /* Chữ đỏ */
+            color: #d32f2f !important;
         }
 
         .text-bold {
@@ -240,56 +345,91 @@
 
 <div class="container">
     <div class="header">
-        Danh Mục Thông Số Đồng Hồ Nước
+        Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
     </div>
 
+    <!-- KHU VỰC THANH TAB ĐIỀU HƯỚNG CHÍNH -->
     <div class="main-controls">
-        <!-- Tab Danh mục chính -->
         <div class="tab-group">
-            <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">1. Đồng Hồ Cơ Khí</button>
-            <button class="tab-btn active" id="btn-pin" onclick="switchCategory('mag8000')">2. Điện Từ Chạy Pin (MAG 8000)</button>
-            <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">3. Điện Từ Điện Lưới (MAG 5000)</button>
-        </div>
-
-        <!-- Cấp đồng hồ cho Cơ Khí -->
-        <div class="sub-controls" id="mechanical-sub-controls" style="display: none;">
-            <label>Chọn Cấp Đồng Hồ:</label>
-            <button class="sub-btn active" id="btn-cap-b" onclick="switchClass('B')">Cấp B</button>
-            <button class="sub-btn" id="btn-cap-c" onclick="switchClass('C')">Cấp C</button>
-        </div>
-
-        <!-- Ô Tìm kiếm -->
-        <div class="search-box">
-            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Nhập Kích cỡ (DN15, DN50...), áp lực hoặc thông số để lọc...">
+            <button class="tab-btn active" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
+            <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
+            <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
+            <button class="tab-btn calc-tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số Sơ Bộ</button>
         </div>
     </div>
 
-    <!-- Banner chú thích -->
-    <div class="info-note" id="infoNote">
-        📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h
+    <!-- TAB HÀM TÍNH TOÁN SAI SỐ SƠ BỘ (HIỂN THỊ KHI CHỌN TAB 4) -->
+    <div class="calc-view" id="calcView">
+        <div class="calc-card">
+            <h3>Công Cụ Tính Toán Vận Tốc & Sai Số Sơ Bộ</h3>
+            <div class="calc-grid">
+                <div class="form-group">
+                    <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
+                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 5" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="diameter">Đường kính ống DN (mm):</label>
+                    <input type="number" id="diameter" placeholder="Ví dụ: 100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="meterType">Loại đồng hồ dự kiến:</label>
+                    <select id="meterType">
+                        <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
+                        <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
+                        <option value="mechanical">Đồng hồ cơ khí (Cấp B)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-calc" onclick="tinhToanSaiSo()">TÍNH TOÁN KẾT QUẢ</button>
+
+            <div id="resultBox" class="result-box">
+                <div class="result-grid">
+                    <div class="result-item">Vận tốc dòng chảy (v): <span id="resVelocity" class="result-value">0</span> m/s</div>
+                    <div class="result-item">Giới hạn sai số sơ bộ (MPE): <span id="resError" class="result-value">0</span></div>
+                </div>
+                <div class="advice-item">Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Bảng Dữ Liệu -->
-    <div class="table-wrapper">
-        <table id="dataTable">
-            <thead>
-                <tr id="tableHeader">
-                    <!-- Tự động sinh Header qua JS -->
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- Tự động sinh Dữ liệu qua JS -->
-            </tbody>
-        </table>
+    <!-- TAB KHU VỰC TRA CỨU DANH MỤC (HIỂN THỊ KHI CHỌN TAB 1, 2, 3) -->
+    <div class="lookup-view" id="lookupView">
+        <div style="padding: 0 15px 15px 15px;">
+            <div class="sub-controls" id="mechanical-sub-controls" style="display: none;">
+                <label>Chọn Cấp Đồng Hồ:</label>
+                <button class="sub-btn active" id="btn-cap-b" onclick="switchClass('B')">Cấp B</button>
+                <button class="sub-btn" id="btn-cap-c" onclick="switchClass('C')">Cấp C</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Nhập Kích cỡ (DN15, DN50...), áp lực hoặc thông số để lọc...">
+            </div>
+        </div>
+
+        <div class="info-note" id="infoNote">
+            📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h
+        </div>
+
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead>
+                    <tr id="tableHeader"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <div class="footer">
-        Dữ liệu tra cứu danh mục đồng hồ nước © 2026
+        Dữ liệu tra cứu & hỗ trợ thiết kế thủy lực © 2026
     </div>
 </div>
 
 <script>
-    // 1. DỮ LIỆU ĐỒNG HỒ ĐIỆN TỪ MAG 8000 (CHẠY PIN)
+    // --- BỘ DỮ LIỆU DANH MỤC ---
     const dataMag8000 = [
         { dn: "DN25", inch: '1"', q1: "0.05", q2: "0.08", q3: "4", q4: "5", pn: "PN16" },
         { dn: "DN40", inch: '1 1/2"', q1: "0.125", q2: "0.2", q3: "10", q4: "12.5", pn: "PN16" },
@@ -313,7 +453,6 @@
         { dn: "DN1200", inch: '48"', q1: "125", q2: "200", q3: "10000", q4: "12500", pn: "PN16" }
     ];
 
-    // 2. DỮ LIỆU ĐỒNG HỒ ĐIỆN TỪ MAG 5000 (ĐIỆN LƯỚI)
     const dataMag5000 = [
         { dn: "DN15", inch: '1/2"', q1: "0.016", q2: "0.025", q3: "2.5", q4: "3.125", pn: "PN40" },
         { dn: "DN25", inch: '1"', q1: "0.04", q2: "0.064", q3: "10", q4: "12.5", pn: "PN40" },
@@ -330,7 +469,6 @@
         { dn: "DN600", inch: '24"', q1: "25.0", q2: "40.0", q3: "6300", q4: "7875", pn: "PN16" }
     ];
 
-    // 3. DỮ LIỆU ĐỒNG HỒ CƠ KHÍ (CẤP B & CẤP C)
     const dataCoKhiB = [
         { dn: "DN15", inch: '1/2"', qmin: "0.03", qt: "0.12", qn: "1.5", qmax: "3.0", pn: "PN10/16" },
         { dn: "DN20", inch: '3/4"', qmin: "0.05", qt: "0.20", qn: "2.5", qmax: "5.0", pn: "PN10/16" },
@@ -351,26 +489,35 @@
         { dn: "DN50", inch: '2"', qmin: "0.225", qt: "0.3375", qn: "15.0", qmax: "30.0", pn: "PN10/16" }
     ];
 
-    // Trạng thái hiện tại
     let currentCategory = 'mag8000';
     let currentClass = 'B';
 
-    // Chuyển đổi danh mục chính
+    // --- CHUYỂN ĐỔI TAB CHÍNH ---
     function switchCategory(cat) {
         currentCategory = cat;
         
-        document.getElementById('btn-co-khi').classList.toggle('active', cat === 'co_khi');
         document.getElementById('btn-pin').classList.toggle('active', cat === 'mag8000');
         document.getElementById('btn-dien').classList.toggle('active', cat === 'mag5000');
+        document.getElementById('btn-co-khi').classList.toggle('active', cat === 'co_khi');
+        document.getElementById('btn-tinh-sai-so').classList.toggle('active', cat === 'tinh_sai_so');
 
+        const calcView = document.getElementById('calcView');
+        const lookupView = document.getElementById('lookupView');
         const subCtrl = document.getElementById('mechanical-sub-controls');
-        subCtrl.style.display = (cat === 'co_khi') ? 'flex' : 'none';
 
-        updateBanner();
-        renderTable();
+        if (cat === 'tinh_sai_so') {
+            calcView.style.display = 'block';
+            lookupView.style.display = 'none';
+        } else {
+            calcView.style.display = 'none';
+            lookupView.style.display = 'block';
+            subCtrl.style.display = (cat === 'co_khi') ? 'flex' : 'none';
+
+            updateBanner();
+            renderTable();
+        }
     }
 
-    // Chuyển đổi cấp đồng hồ cơ khí
     function switchClass(cls) {
         currentClass = cls;
         document.getElementById('btn-cap-b').classList.toggle('active', cls === 'B');
@@ -380,19 +527,17 @@
         renderTable();
     }
 
-    // Cập nhật banner chú thích
     function updateBanner() {
         const info = document.getElementById('infoNote');
         if (currentCategory === 'mag8000') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h`;
         } else if (currentCategory === 'mag5000') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 5000 (Điện Lưới 220V/24V) | Bộ truyền tín hiệu chính xác cao | Đơn vị: m³/h`;
-        } else {
+        } else if (currentCategory === 'co_khi') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> Đồng hồ nước Cơ khí - <strong>Cấp ${currentClass}</strong> (Theo tiêu chuẩn ISO 4064 / TCVN 5621) | Đơn vị: m³/h`;
         }
     }
 
-    // Render Bảng Dữ Liệu
     function renderTable() {
         const thead = document.getElementById('tableHeader');
         const tbody = document.getElementById('tableBody');
@@ -435,7 +580,7 @@
                 `;
                 tbody.appendChild(tr);
             });
-        } else {
+        } else if (currentCategory === 'co_khi') {
             headers = [
                 'Kích cỡ<br>(DN)', 
                 'Tương ứng<br>(Inch)', 
@@ -472,14 +617,12 @@
         filterTable();
     }
 
-    // Hàm xử lý highlight khi bấm vào dòng
     function selectRow(row) {
         const rows = document.querySelectorAll('#tableBody tr');
         rows.forEach(r => r.classList.remove('selected-row'));
         row.classList.add('selected-row');
     }
 
-    // Hàm Lọc theo ô tìm kiếm
     function filterTable() {
         const filter = document.getElementById('searchInput').value.toUpperCase();
         const trs = document.getElementById('tableBody').getElementsByTagName('tr');
@@ -494,7 +637,79 @@
         }
     }
 
-    // Khởi tạo bảng ban đầu
+    // --- TÍNH TOÁN SAI SỐ SƠ BỘ ---
+    function tinhToanSaiSo() {
+        const Q = parseFloat(document.getElementById('flowrate').value);
+        const D = parseFloat(document.getElementById('diameter').value);
+        const type = document.getElementById('meterType').value;
+        
+        if (isNaN(Q) || isNaN(D) || Q <= 0 || D <= 0) {
+            alert("Vui lòng nhập giá trị Lưu lượng và Đường kính hợp lệ lớn hơn 0.");
+            return;
+        }
+
+        const v = (4 * Q) / (Math.PI * Math.pow(D / 1000, 2) * 3600);
+        let mpe = 0;
+        let advice = "";
+        let color = "#16a34a";
+
+        if (type === "mag5000") {
+            if (v >= 0.5) {
+                mpe = 0.4;
+                advice = "Dòng chảy lý tưởng cho đồng hồ điện từ điện lưới.";
+            } else if (v >= 0.1) {
+                mpe = 0.1 + (0.15 / v);
+                advice = "Vận tốc thấp, sai số tăng nhẹ nhưng hệ thống điện lưới hoạt động ổn định.";
+            } else {
+                mpe = 0.1 + (0.15 / v);
+                advice = "Cảnh báo: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu đáy lớn. Nên cân nhắc thu hẹp đường kính ống tại vị trí lắp đặt.";
+                color = "#dc2626";
+            }
+        } 
+        else if (type === "mag8000") {
+            if (v >= 0.5) {
+                mpe = 0.5;
+                advice = "Hoạt động ổn định ở dải đo tối ưu của thiết bị chạy pin.";
+            } else if (v >= 0.015) {
+                mpe = 0.4 + (0.2 / v);
+                advice = "Đo đạt tiêu chuẩn, sai số tăng dần ở lưu lượng thấp để tối ưu dòng pin quét.";
+            } else {
+                mpe = 0.4 + (0.2 / v);
+                advice = "Cảnh báo nghiêm trọng: Vận tốc chạm ngưỡng chết của cảm biến pin (< 15 mm/s). Đồng hồ có nguy cơ không đo được.";
+                color = "#dc2626";
+            }
+        } 
+        else if (type === "mechanical") {
+            if (v >= 0.03) {
+                mpe = 2.0;
+                advice = "Đồng hồ cơ chạy trong dải lưu lượng cao (Vùng trên), độ bền cơ học tốt.";
+            } else if (v >= 0.015) {
+                mpe = 5.0;
+                advice = "Đồng hồ rơi vào vùng lưu lượng thấp (Vùng dưới), sai số lớn. Dễ tổn thất thương mại.";
+                color = "#d97706";
+            } else {
+                mpe = 100;
+                advice = "Cảnh báo: Hiện tượng 'Chết đồng hồ cơ học'. Nước chảy qua nhưng kim không quay (Sai số tiến về -100%).";
+                color = "#dc2626";
+            }
+        }
+
+        document.getElementById('resVelocity').innerText = v.toFixed(3);
+        
+        if (type === "mechanical" && v < 0.015) {
+            document.getElementById('resError').innerText = "-100% (Không quay)";
+        } else {
+            document.getElementById('resError').innerText = "± " + mpe.toFixed(2) + " %";
+        }
+        
+        const adviceSpan = document.getElementById('resAdvice');
+        adviceSpan.innerText = advice;
+        adviceSpan.style.color = color;
+        
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    // Khởi tạo mặc định ở Tab 1
     switchCategory('mag8000');
 </script>
 
