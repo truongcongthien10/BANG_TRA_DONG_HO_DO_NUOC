@@ -72,7 +72,6 @@
             background-color: #e2e8f0;
         }
 
-        /* TAB KHI ĐƯỢC CHỌN - NỀN VÀNG NHẠT */
         .tab-btn.active {
             background-color: #fff9c4 !important;
             color: #b91c1c !important;
@@ -80,7 +79,7 @@
             box-shadow: inset 0 0 0 1px #f59e0b, 0 2px 4px rgba(0,0,0,0.08);
         }
 
-        /* TAB TÍNH TOÁN SAI SỐ */
+        /* TAB TÍNH TOÁN SAI SỐ & TỔN THẤP CỘT ÁP */
         .calc-view {
             padding: 20px;
             background-color: #f8fafc;
@@ -120,7 +119,6 @@
             color: #475569;
         }
 
-        /* Ô NHẬP DỮ LIỆU & DROPDOWN */
         .form-group input, .form-group select {
             padding: 9px 12px;
             border: 1px solid #cbd5e1;
@@ -131,7 +129,6 @@
             transition: all 0.2s ease;
         }
 
-        /* NỀN VÀNG NHẠT KHI CLICK CHỌN Ô NHẬP DỮ LIỆU */
         .form-group input:focus, .form-group select:focus {
             background-color: #fff9c4 !important;
             border-color: #d97706 !important;
@@ -172,7 +169,7 @@
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 10px;
         }
 
@@ -184,6 +181,11 @@
         .result-value {
             font-weight: bold;
             color: #d97706;
+        }
+
+        .result-value-loss {
+            font-weight: bold;
+            color: #dc2626;
         }
 
         .advice-item {
@@ -198,7 +200,6 @@
             border-top-color: #fca5a5;
         }
 
-        /* THÔNG SỐ SO SÁNH TIÊU CHUẨN KỸ THUẬT */
         .spec-compare-box {
             background-color: #ffffff;
             border: 1px solid #cbd5e1;
@@ -392,20 +393,19 @@
         Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
     </div>
 
-    <!-- THANH TAB NỀN VÀNG NHẠT KHI ĐƯỢC CHỌN -->
     <div class="main-controls">
         <div class="tab-group">
             <button class="tab-btn active" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
             <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
             <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
-            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số Sơ Bộ</button>
+            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số & Tổn Thất Áp Lực</button>
         </div>
     </div>
 
-    <!-- TAB TÍNH TOÁN SAI SỐ -->
+    <!-- TAB TÍNH TOÁN SAI SỐ & TỔN THẤP -->
     <div class="calc-view" id="calcView">
         <div class="calc-card">
-            <h3>Công Cụ Tính Toán Vận Tốc & Sai Số Sơ Bộ</h3>
+            <h3>Công Cụ Tính Toán Vận Tốc, Sai Số & Tổn Thất Áp Lực Qua Đồng Hồ</h3>
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
@@ -422,24 +422,24 @@
                     <select id="meterType" onfocus="this.select()">
                         <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
                         <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
-                        <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C)</option>
+                        <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C - Woltman)</option>
                     </select>
                 </div>
             </div>
 
-            <button class="btn-calc" onclick="tinhToanSaiSo()">TÍNH TOÁN KẾT QUẢ</button>
+            <button class="btn-calc" onclick="tinhToanThuyLuc()">TÍNH TOÁN KẾT QUẢ</button>
 
             <div id="resultBox" class="result-box">
                 <div class="result-grid">
                     <div class="result-item">Vận tốc dòng chảy (v): <span id="resVelocity" class="result-value">0</span> m/s</div>
                     <div class="result-item">Giới hạn sai số sơ bộ (MPE): <span id="resError" class="result-value">0</span></div>
+                    <div class="result-item">Tổn thất áp lực (ΔP): <span id="resLossHead" class="result-value-loss">0</span> mH₂O (<span id="resLossBar" class="result-value-loss">0</span> bar)</div>
                 </div>
                 
                 <div class="advice-item">
                     Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
                 </div>
 
-                <!-- KHU VỰC THÔNG SỐ KỸ THUẬT VỚI V_MAX ĐƯỢC ĐẶT SUB -->
                 <div class="spec-compare-box">
                     <div class="spec-title">THÔNG SỐ KỸ THUẬT & SAI SỐ CƠ BẢN THIẾT BỊ ĐƯỢC CHỌN (CHUẨN HÃNG / ISO 4064):</div>
                     <div class="spec-grid">
@@ -649,8 +649,7 @@
             data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
 
             headers.forEach(h => {
-                let th = document.createElement('th');
-                th.innerHTML = h;
+                let th = document.innerHTML = h;
                 thead.appendChild(th);
             });
 
@@ -693,7 +692,7 @@
         }
     }
 
-    function tinhToanSaiSo() {
+    function tinhToanThuyLuc() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
         const type = document.getElementById('meterType').value;
@@ -705,6 +704,7 @@
 
         const v = (4 * Q) / (Math.PI * Math.pow(D / 1000, 2) * 3600);
         let mpe = 0;
+        let deltaP_mH2O = 0;
         let advice = "";
         let color = "#16a34a";
         let isOverSpeed = false;
@@ -714,53 +714,62 @@
         const specLowerErr = document.getElementById('specLowerErr');
         const specMaxVel = document.getElementById('specMaxVel');
 
-        if (type === "mag5000") {
-            specVelRange.innerText = "0.5 ÷ 10.0 m/s";
-            specUpperErr.innerText = "± 0.40 %";
-            specLowerErr.innerText = "± 0.50 %";
-            specMaxVel.innerText = "10.0 m/s";
+        if (type === "mag5000" || type === "mag8000") {
+            // Đồng hồ điện từ: Tổn thất cục bộ nhỏ (K ~ 0.15), chủ yếu do động năng vận tốc (v^2 / 2g)
+            deltaP_mH2O = 0.15 * (Math.pow(v, 2) / (2 * 9.81));
+            
+            if (type === "mag5000") {
+                specVelRange.innerText = "0.5 ÷ 10.0 m/s";
+                specUpperErr.innerText = "± 0.40 %";
+                specLowerErr.innerText = "± 0.50 %";
+                specMaxVel.innerText = "10.0 m/s";
 
-            if (v > 10.0) {
-                isOverSpeed = true;
-                mpe = NaN;
-                advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vận tốc vượt ngưỡng kỹ thuật tối đa của cảm biến điện từ Siemens MAG 5000. Tín hiệu đo bị bão hòa, sụt áp lớn và nguy cơ xâm thực.";
-                color = "#dc2626";
-            } else if (v >= 0.5) {
-                mpe = 0.4;
-                advice = "Hoạt động ổn định trong dải vận tốc tối ưu (0.5 - 10 m/s).";
-            } else if (v >= 0.1) {
-                mpe = 0.1 + (0.15 / v);
-                advice = "Vận tốc thấp (0.1 - 0.5 m/s), sai số tăng nhẹ nhưng hệ thống điện lưới vẫn đảm bảo độ chính xác.";
+                if (v > 10.0) {
+                    isOverSpeed = true;
+                    mpe = NaN;
+                    advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vượt ngưỡng kỹ thuật của cảm biến Siemens MAG 5000. Tín hiệu đo bị bão hòa và nguy cơ xâm thực.";
+                    color = "#dc2626";
+                } else if (v >= 0.5) {
+                    mpe = 0.4;
+                    advice = "Hoạt động ổn định trong dải vận tốc tối ưu (0.5 - 10 m/s). Tổn thất áp lực cực thấp.";
+                } else if (v >= 0.1) {
+                    mpe = 0.1 + (0.15 / v);
+                    advice = "Vận tốc thấp (0.1 - 0.5 m/s), sai số tăng nhẹ nhưng hệ thống điện lưới vẫn đảm bảo độ chính xác.";
+                } else {
+                    mpe = 0.1 + (0.15 / v);
+                    advice = "Cảnh báo: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu đáy lớn. Cần thu hẹp đường kính ống tại vị trí đặt cảm biến.";
+                    color = "#dc2626";
+                }
             } else {
-                mpe = 0.1 + (0.15 / v);
-                advice = "Cảnh báo: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu đáy lớn. Cần thu hẹp đường kính ống tại vị trí đặt cảm biến.";
-                color = "#dc2626";
-            }
-        } 
-        else if (type === "mag8000") {
-            specVelRange.innerText = "0.5 ÷ 10.0 m/s";
-            specUpperErr.innerText = "± 0.50 %";
-            specLowerErr.innerText = "± 0.80 %";
-            specMaxVel.innerText = "10.0 m/s";
+                specVelRange.innerText = "0.5 ÷ 10.0 m/s";
+                specUpperErr.innerText = "± 0.50 %";
+                specLowerErr.innerText = "± 0.80 %";
+                specMaxVel.innerText = "10.0 m/s";
 
-            if (v > 10.0) {
-                isOverSpeed = true;
-                mpe = NaN;
-                advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vận tốc vượt dải đo max của Siemens MAG 8000. Gây sai số nghiêm trọng và giảm thọ pin do mạch xử lý hoạt động liên tục.";
-                color = "#dc2626";
-            } else if (v >= 0.5) {
-                mpe = 0.5;
-                advice = "Hoạt động ổn định ở dải đo tối ưu của thiết bị chạy pin.";
-            } else if (v >= 0.015) {
-                mpe = 0.4 + (0.2 / v);
-                advice = "Đo đạt tiêu chuẩn, sai số tăng dần ở lưu lượng thấp để tối ưu dòng pin quét.";
-            } else {
-                mpe = 0.4 + (0.2 / v);
-                advice = "Cảnh báo nghiêm trọng: Vận tốc chạm ngưỡng chết của cảm biến pin (< 15 mm/s). Đồng hồ không đo được.";
-                color = "#dc2626";
+                if (v > 10.0) {
+                    isOverSpeed = true;
+                    mpe = NaN;
+                    advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vượt dải đo max của Siemens MAG 8000. Gây sai số nghiêm trọng và hao pin nhanh.";
+                    color = "#dc2626";
+                } else if (v >= 0.5) {
+                    mpe = 0.5;
+                    advice = "Hoạt động ổn định ở dải đo tối ưu của thiết bị chạy pin. Cột áp tổn thất không đáng kể.";
+                } else if (v >= 0.015) {
+                    mpe = 0.4 + (0.2 / v);
+                    advice = "Đo đạt tiêu chuẩn, sai số tăng dần ở lưu lượng thấp để tối ưu dòng pin quét.";
+                } else {
+                    mpe = 0.4 + (0.2 / v);
+                    advice = "Cảnh báo nghiêm trọng: Vận tốc chạm ngưỡng chết của cảm biến pin (< 15 mm/s). Đồng hồ không đo được.";
+                    color = "#dc2626";
+                }
             }
         } 
         else if (type === "mechanical") {
+            // Đồng hồ cơ khí Woltman: ΔP tỉ lệ với (Q / Q3)^2. ISO 4064 quy định max 0.63 bar (6.3 mH2O) tại Q3 (v~2.5 m/s)
+            // Tính tổn thất thủy lực theo đặc tính tua-bin:
+            let Q3_estimate = 3500 * Math.PI * Math.pow(D / 1000, 2) / 4; // Lưu lượng danh định chuẩn theo đường kính
+            deltaP_mH2O = 6.3 * Math.pow(Q / Q3_estimate, 2);
+
             specVelRange.innerText = "0.3 ÷ 2.5 m/s";
             specUpperErr.innerText = "± 2.00 %";
             specLowerErr.innerText = "± 5.00 %";
@@ -769,7 +778,7 @@
             if (v > 3.0) {
                 isOverSpeed = true;
                 mpe = NaN;
-                advice = "🚨 CẢNH BÁO VI PHẠM TCVN 8783 / ISO 4064 (v > 3.0 m/s): Lưu lượng vượt ngưỡng quá tải Q4/Qmax. Nguy cơ làm hỏng cơ cấu truyền động cánh quạt, mòn mố gối đỡ và gây sụt áp > 0.63 bar.";
+                advice = "🚨 CẢNH BÁO VI PHẠM TCVN 8783 / ISO 4064 (v > 3.0 m/s): Lưu lượng vượt quá tải Q4/Qmax. Tổn thất cột áp rất lớn, nguy cơ hỏng tua-bin cánh quạt và mòn gối đỡ.";
                 color = "#dc2626";
             } else if (v >= 0.03) {
                 mpe = 2.0;
@@ -785,7 +794,11 @@
             }
         }
 
+        const deltaP_bar = deltaP_mH2O * 0.0980665;
+
         document.getElementById('resVelocity').innerText = v.toFixed(3);
+        document.getElementById('resLossHead').innerText = deltaP_mH2O.toFixed(2);
+        document.getElementById('resLossBar').innerText = deltaP_bar.toFixed(3);
         
         const resultBox = document.getElementById('resultBox');
         if (isOverSpeed) {
