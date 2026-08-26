@@ -29,7 +29,7 @@
             border: 1px solid #cbd5e1;
         }
 
-        /* HEADER & LOGO NHÚNG TRỰC TIẾP SVG */
+        /* HEADER & LOGO CHUẨN HUEWACO */
         .header {
             background: linear-gradient(135deg, #0f2b5c 0%, #1e40af 100%);
             color: #ffffff;
@@ -42,7 +42,7 @@
 
         .header-logo-container {
             background: #ffffff;
-            padding: 4px 10px;
+            padding: 2px 6px;
             border-radius: 6px;
             display: flex;
             align-items: center;
@@ -51,7 +51,7 @@
         }
 
         .header-logo-svg {
-            height: 42px;
+            height: 44px;
             width: auto;
             display: block;
         }
@@ -67,7 +67,7 @@
         }
 
         .header-spacer {
-            width: 120px; /* Cân bằng với độ rộng container logo */
+            width: 160px; /* Cân bằng chiều rộng với logo bên trái */
         }
 
         .main-controls {
@@ -431,13 +431,22 @@
 <div class="container">
     <div class="header">
         <div class="header-logo-container">
-            <!-- LOGO HUEWACO VECTOR SVG NHÚNG TRỰC TIẾP HẠN CHẾ LỖI NGUYÊN BẢN -->
-            <svg class="header-logo-svg" viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg">
-                <!-- Biểu tượng sóng nước HueWACO -->
-                <path d="M 12 34 C 20 20, 28 40, 36 26 C 40 20, 42 12, 36 8 C 28 3, 22 18, 16 26 C 12 30, 8 28, 6 24 C 4 20, 8 12, 14 8" fill="none" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round"/>
-                <path d="M 22 38 C 30 24, 38 44, 46 30 C 50 24, 52 16, 46 12 C 38 7, 32 22, 26 30" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
-                <!-- Chữ HueWACO -->
-                <text x="56" y="33" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="25" fill="#0f2b5c" letter-spacing="-0.5">Hue<tspan fill="#0284c7">WACO</tspan></text>
+            <!-- LOGO HUEWACO VECTOR SVG CHUẨN NHẬN DIỆN THƯƠNG HIỆU -->
+            <svg class="header-logo-svg" viewBox="0 0 170 42" xmlns="http://www.w3.org/2000/svg">
+                <!-- Nền bo góc màu vàng chanh -->
+                <rect x="1" y="1" width="168" height="40" rx="8" ry="8" fill="#d0df00"/>
+                
+                <!-- Biểu tượng đường cong cách điệu màu xanh lá -->
+                <g transform="translate(6, 3)">
+                    <path d="M 12,28 C 6,24 6,14 14,9 C 22,4 30,12 24,20 C 20,25 14,21 16,16 C 18,12 24,14 22,18 C 20,21 18,18 18,16" 
+                          fill="none" stroke="#007a33" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 22,31 C 12,28 10,16 20,11 C 28,7 34,18 28,25 C 24,29 20,25 22,20" 
+                          fill="none" stroke="#007a33" stroke-width="2.5" stroke-linecap="round"/>
+                </g>
+
+                <!-- Chữ HueWACO chính xác font và màu sắc -->
+                <text x="44" y="28" font-family="'Segoe UI', Arial, sans-serif" font-weight="800" font-size="20" fill="#0f2b5c" letter-spacing="-0.5">Hue</text>
+                <text x="82" y="28" font-family="'Segoe UI', Arial, sans-serif" font-weight="900" font-size="20" fill="#007a33" letter-spacing="-0.5">WACO</text>
             </svg>
         </div>
         <div class="header-title">
@@ -536,7 +545,7 @@
 
     <div class="footer">
         <div>Dữ liệu tra cứu & hỗ trợ thiết kế thủy lực © 2026</div>
-        <div class="footer-dept">PHÒNG KỸ THUẬT - HueWACO</div>
+        <div class="footer-dept">PHÒNG KỸ THUẬT - HUEWACO</div>
     </div>
 </div>
 
@@ -839,7 +848,7 @@
             if (v > 3.0 || deltaP_mH2O > 6.3) {
                 statusClass = "danger-box";
                 mpe = NaN;
-                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ (bất kể DN50 hay DN500). Vi phạm TCVN 8783 / ISO 4064!";
+                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ. Vi phạm TCVN 8783 / ISO 4064!";
                 color = "#dc2626";
             } else if (v >= 0.03) {
                 mpe = 2.0;
