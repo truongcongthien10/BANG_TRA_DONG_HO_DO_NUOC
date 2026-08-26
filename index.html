@@ -120,6 +120,7 @@
             color: #475569;
         }
 
+        /* Ô NHẬP DỮ LIỆU & DROPDOWN */
         .form-group input, .form-group select {
             padding: 9px 12px;
             border: 1px solid #cbd5e1;
@@ -127,10 +128,14 @@
             font-size: 14px;
             outline: none;
             background-color: #fff;
+            transition: all 0.2s ease;
         }
 
+        /* NỀN VÀNG NHẠT + VIỀN ĐẬM KHI CLICK CHỌN Ô NHẬP DỮ LIỆU */
         .form-group input:focus, .form-group select:focus {
-            border-color: #0284c7;
+            background-color: #fff9c4 !important;
+            border-color: #d97706 !important;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
         }
 
         .btn-calc {
@@ -278,7 +283,8 @@
         }
 
         .search-box input:focus {
-            border-color: #005a36;
+            background-color: #fff9c4 !important;
+            border-color: #d97706 !important;
         }
 
         .search-box::before {
@@ -403,17 +409,17 @@
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
-                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 1500" required>
+                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 1500" onfocus="this.select()" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="diameter">Đường kính ống DN (mm):</label>
-                    <input type="number" id="diameter" placeholder="Ví dụ: 500" required>
+                    <input type="number" id="diameter" placeholder="Ví dụ: 500" onfocus="this.select()" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="meterType">Loại đồng hồ dự kiến:</label>
-                    <select id="meterType">
+                    <select id="meterType" onfocus="this.select()">
                         <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
                         <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
                         <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C)</option>
@@ -433,14 +439,14 @@
                     Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
                 </div>
 
-                <!-- BỔ SUNG KHU VỰC THÔNG SỐ KỸ THUẬT TIÊU CHUẨN ĐỂ SO SÁNH -->
+                <!-- KHU VỰC THÔNG SỐ KỸ THUẬT TIÊU CHUẨN LOẠI BỎ KÝ TỰ THỪA -->
                 <div class="spec-compare-box">
-                    <div class="spec-title">📋 Thông số kỹ thuật & Sai số cơ bản thiết bị được chọn (Chuẩn hãng / ISO 4064):</div>
+                    <div class="spec-title">THÔNG SỐ KỸ THUẬT & SAI SỐ CƠ BẢN THIẾT BỊ ĐƯỢC CHỌN (CHUẨN HÃNG / ISO 4064):</div>
                     <div class="spec-grid">
                         <div>Dải vận tốc chuẩn: <span id="specVelRange">-</span></div>
                         <div>Sai số Vùng Trên (Q₂ - Q₄): <span id="specUpperErr">-</span></div>
                         <div>Sai số Vùng Dưới (Q₁ - Q₂): <span id="specLowerErr">-</span></div>
-                        <div>Vận tốc tối đa cho phép ($v_{max}$): <span id="specMaxVel" style="color: #dc2626;">-</span></div>
+                        <div>Vận tốc tối đa cho phép (v_max): <span id="specMaxVel" style="color: #dc2626;">-</span></div>
                     </div>
                 </div>
             </div>
@@ -457,7 +463,7 @@
             </div>
 
             <div class="search-box">
-                <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Nhập Kích cỡ (DN15, DN50...), áp lực hoặc thông số để lọc...">
+                <input type="text" id="searchInput" onkeyup="filterTable()" onfocus="this.select()" placeholder="Nhập Kích cỡ (DN15, DN50...), áp lực hoặc thông số để lọc...">
             </div>
         </div>
 
@@ -704,7 +710,6 @@
         let color = "#16a34a";
         let isOverSpeed = false;
 
-        // Cập nhật thông số tiêu chuẩn để so sánh
         const specVelRange = document.getElementById('specVelRange');
         const specUpperErr = document.getElementById('specUpperErr');
         const specLowerErr = document.getElementById('specLowerErr');
