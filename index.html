@@ -40,7 +40,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* DIEU KHIEN TAB CHINHI */
+        /* DIEU KHIEN TAB CHINH */
         .main-controls {
             padding: 15px;
             background-color: #ffffff;
@@ -81,7 +81,7 @@
         }
 
         .tab-btn.calc-tab-btn.active {
-            background-color: #0284c7; /* Màu xanh biển nổi bật cho Tab tính toán */
+            background-color: #0284c7;
             border-color: #0369a1;
         }
 
@@ -164,6 +164,11 @@
             display: none;
         }
 
+        .result-box.danger-box {
+            background-color: #fef2f2;
+            border-left-color: #dc2626;
+        }
+
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -185,6 +190,11 @@
             font-size: 13.5px;
             padding-top: 8px;
             border-top: 1px dashed #bae6fd;
+            line-height: 1.4;
+        }
+
+        .danger-box .advice-item {
+            border-top-color: #fca5a5;
         }
 
         /* TAB BẢNG TRA CỨU */
@@ -358,19 +368,19 @@
         </div>
     </div>
 
-    <!-- TAB HÀM TÍNH TOÁN SAI SỐ SƠ BỘ (HIỂN THỊ KHI CHỌN TAB 4) -->
+    <!-- TAB HÀM TÍNH TOÁN SAI SỐ SƠ BỘ -->
     <div class="calc-view" id="calcView">
         <div class="calc-card">
-            <h3>Công Cụ Tính Toán Vận Tốc & Sai Số Sơ Bộ</h3>
+            <h3>Công Cụ Tính Toán Vận Tốc & Sai Số Sơ Bộ (TCVN 8783 / ISO 4064)</h3>
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
-                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 5" required>
+                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 1500" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="diameter">Đường kính ống DN (mm):</label>
-                    <input type="number" id="diameter" placeholder="Ví dụ: 100" required>
+                    <input type="number" id="diameter" placeholder="Ví dụ: 500" required>
                 </div>
                 
                 <div class="form-group">
@@ -378,7 +388,7 @@
                     <select id="meterType">
                         <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
                         <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
-                        <option value="mechanical">Đồng hồ cơ khí (Cấp B)</option>
+                        <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C)</option>
                     </select>
                 </div>
             </div>
@@ -390,12 +400,12 @@
                     <div class="result-item">Vận tốc dòng chảy (v): <span id="resVelocity" class="result-value">0</span> m/s</div>
                     <div class="result-item">Giới hạn sai số sơ bộ (MPE): <span id="resError" class="result-value">0</span></div>
                 </div>
-                <div class="advice-item">Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span></div>
+                <div class="advice-item">Khuyến nghị kỹ thuật & Tiêu chuẩn: <span id="resAdvice" style="font-weight: bold;"></span></div>
             </div>
         </div>
     </div>
 
-    <!-- TAB KHU VỰC TRA CỨU DANH MỤC (HIỂN THỊ KHI CHỌN TAB 1, 2, 3) -->
+    <!-- TAB KHU VỰC TRA CỨU DANH MỤC -->
     <div class="lookup-view" id="lookupView">
         <div style="padding: 0 15px 15px 15px;">
             <div class="sub-controls" id="mechanical-sub-controls" style="display: none;">
@@ -429,7 +439,6 @@
 </div>
 
 <script>
-    // --- BỘ DỮ LIỆU DANH MỤC ---
     const dataMag8000 = [
         { dn: "DN25", inch: '1"', q1: "0.05", q2: "0.08", q3: "4", q4: "5", pn: "PN16" },
         { dn: "DN40", inch: '1 1/2"', q1: "0.125", q2: "0.2", q3: "10", q4: "12.5", pn: "PN16" },
@@ -492,7 +501,6 @@
     let currentCategory = 'mag8000';
     let currentClass = 'B';
 
-    // --- CHUYỂN ĐỔI TAB CHÍNH ---
     function switchCategory(cat) {
         currentCategory = cat;
         
@@ -637,7 +645,7 @@
         }
     }
 
-    // --- TÍNH TOÁN SAI SỐ SƠ BỘ ---
+    // --- TÍNH TOÁN SAI SỐ SƠ BỘ VÀ KIỂM TRA GIỚI HẠN VẬN TỐC TỐI ĐA ---
     function tinhToanSaiSo() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
@@ -652,22 +660,33 @@
         let mpe = 0;
         let advice = "";
         let color = "#16a34a";
+        let isOverSpeed = false;
 
         if (type === "mag5000") {
-            if (v >= 0.5) {
+            if (v > 10.0) {
+                isOverSpeed = true;
+                mpe = NaN;
+                advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vận tốc vượt ngưỡng kỹ thuật tối đa của cảm biến điện từ Siemens MAG 5000. Tín hiệu đo bị bão hòa, sụt áp lớn và nguy cơ xâm thực.";
+                color = "#dc2626";
+            } else if (v >= 0.5) {
                 mpe = 0.4;
-                advice = "Dòng chảy lý tưởng cho đồng hồ điện từ điện lưới.";
+                advice = "Hoạt động ổn định trong dải vận tốc tối ưu (0.5 - 10 m/s).";
             } else if (v >= 0.1) {
                 mpe = 0.1 + (0.15 / v);
-                advice = "Vận tốc thấp, sai số tăng nhẹ nhưng hệ thống điện lưới hoạt động ổn định.";
+                advice = "Vận tốc thấp (0.1 - 0.5 m/s), sai số tăng nhẹ nhưng hệ thống điện lưới vẫn đảm bảo độ chính xác.";
             } else {
                 mpe = 0.1 + (0.15 / v);
-                advice = "Cảnh báo: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu đáy lớn. Nên cân nhắc thu hẹp đường kính ống tại vị trí lắp đặt.";
+                advice = "Cảnh báo: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu đáy lớn. Cần thu hẹp đường kính ống tại vị trí đặt cảm biến.";
                 color = "#dc2626";
             }
         } 
         else if (type === "mag8000") {
-            if (v >= 0.5) {
+            if (v > 10.0) {
+                isOverSpeed = true;
+                mpe = NaN;
+                advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vận tốc vượt dải đo max của Siemens MAG 8000. Gây sai số nghiêm trọng và giảm thọ pin do mạch xử lý hoạt động liên tục.";
+                color = "#dc2626";
+            } else if (v >= 0.5) {
                 mpe = 0.5;
                 advice = "Hoạt động ổn định ở dải đo tối ưu của thiết bị chạy pin.";
             } else if (v >= 0.015) {
@@ -675,17 +694,22 @@
                 advice = "Đo đạt tiêu chuẩn, sai số tăng dần ở lưu lượng thấp để tối ưu dòng pin quét.";
             } else {
                 mpe = 0.4 + (0.2 / v);
-                advice = "Cảnh báo nghiêm trọng: Vận tốc chạm ngưỡng chết của cảm biến pin (< 15 mm/s). Đồng hồ có nguy cơ không đo được.";
+                advice = "Cảnh báo nghiêm trọng: Vận tốc chạm ngưỡng chết của cảm biến pin (< 15 mm/s). Đồng hồ không đo được.";
                 color = "#dc2626";
             }
         } 
         else if (type === "mechanical") {
-            if (v >= 0.03) {
+            if (v > 3.0) {
+                isOverSpeed = true;
+                mpe = NaN;
+                advice = "🚨 CẢNH BÁO VI PHẠM TCVN 8783 / ISO 4064 (v > 3.0 m/s): Lưu lượng vượt ngưỡng quá tải Q4/Qmax. Nguy cơ làm hỏng cơ cấu truyền động cánh quạt, mòn mòn mố gối đỡ và gây sụt áp > 0.63 bar.";
+                color = "#dc2626";
+            } else if (v >= 0.03) {
                 mpe = 2.0;
-                advice = "Đồng hồ cơ chạy trong dải lưu lượng cao (Vùng trên), độ bền cơ học tốt.";
+                advice = "Đồng hồ cơ chạy trong dải lưu lượng cao (Vùng trên Q2 đến Q3), hoạt động ổn định.";
             } else if (v >= 0.015) {
                 mpe = 5.0;
-                advice = "Đồng hồ rơi vào vùng lưu lượng thấp (Vùng dưới), sai số lớn. Dễ tổn thất thương mại.";
+                advice = "Đồng hồ rơi vào vùng lưu lượng thấp (Vùng dưới Q1 đến Q2), sai số lớn (±5%). Dễ thất thoát thương mại.";
                 color = "#d97706";
             } else {
                 mpe = 100;
@@ -696,20 +720,26 @@
 
         document.getElementById('resVelocity').innerText = v.toFixed(3);
         
-        if (type === "mechanical" && v < 0.015) {
-            document.getElementById('resError').innerText = "-100% (Không quay)";
+        const resultBox = document.getElementById('resultBox');
+        if (isOverSpeed) {
+            resultBox.classList.add('danger-box');
+            document.getElementById('resError').innerText = "VƯỢT GIỚI HẠN PHÁP LÝ";
         } else {
-            document.getElementById('resError').innerText = "± " + mpe.toFixed(2) + " %";
+            resultBox.classList.remove('danger-box');
+            if (type === "mechanical" && v < 0.015) {
+                document.getElementById('resError').innerText = "-100% (Không quay)";
+            } else {
+                document.getElementById('resError').innerText = "± " + mpe.toFixed(2) + " %";
+            }
         }
         
         const adviceSpan = document.getElementById('resAdvice');
         adviceSpan.innerText = advice;
         adviceSpan.style.color = color;
         
-        document.getElementById('resultBox').style.display = 'block';
+        resultBox.style.display = 'block';
     }
 
-    // Khởi tạo mặc định ở Tab 1
     switchCategory('mag8000');
 </script>
 
