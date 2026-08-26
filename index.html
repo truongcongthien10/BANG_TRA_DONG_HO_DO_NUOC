@@ -40,7 +40,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* ĐIỀU KHIỂN TAB CHÍNH */
         .main-controls {
             padding: 12px 15px;
             background-color: #ffffff;
@@ -79,7 +78,6 @@
             box-shadow: inset 0 0 0 1px #f59e0b, 0 2px 4px rgba(0,0,0,0.08);
         }
 
-        /* TAB TÍNH TOÁN SAI SỐ & TỔN THẤP CỘT ÁP */
         .calc-view {
             padding: 20px;
             background-color: #f8fafc;
@@ -166,6 +164,11 @@
             border-left-color: #dc2626;
         }
 
+        .result-box.warning-box {
+            background-color: #fffbe3;
+            border-left-color: #d97706;
+        }
+
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -200,6 +203,10 @@
             border-top-color: #fca5a5;
         }
 
+        .warning-box .advice-item {
+            border-top-color: #fde68a;
+        }
+
         .spec-compare-box {
             background-color: #ffffff;
             border: 1px solid #cbd5e1;
@@ -230,7 +237,6 @@
             color: #0284c7;
         }
 
-        /* TAB BẢNG TRA CỨU */
         .lookup-view {
             display: block;
         }
@@ -398,14 +404,14 @@
             <button class="tab-btn active" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
             <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
             <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
-            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số & Tổn Thất Áp Lực</button>
+            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số & Cảnh Báo Thủy Lực</button>
         </div>
     </div>
 
-    <!-- TAB TÍNH TOÁN SAI SỐ & TỔN THẤP -->
+    <!-- TAB TÍNH TOÁN SAI SỐ & CẢNH BÁO THỦY LỰC -->
     <div class="calc-view" id="calcView">
         <div class="calc-card">
-            <h3>Công Cụ Tính Toán Vận Tốc, Sai Số & Tổn Thất Áp Lực Qua Đồng Hồ</h3>
+            <h3>Công Cụ Tính Toán Vận Tốc, Sai Số & Cảnh Báo Bất Thường Thủy Lực</h3>
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
@@ -427,7 +433,7 @@
                 </div>
             </div>
 
-            <button class="btn-calc" onclick="tinhToanThuyLuc()">TÍNH TOÁN KẾT QUẢ</button>
+            <button class="btn-calc" onclick="tinhToanThuyLuc()">TÍNH TOÁN KẾT QUẢ & KIỂM TRA CẢNH BÁO</button>
 
             <div id="resultBox" class="result-box">
                 <div class="result-grid">
@@ -437,7 +443,7 @@
                 </div>
                 
                 <div class="advice-item">
-                    Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
+                    Trạng thái & Cảnh báo kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
                 </div>
 
                 <div class="spec-compare-box">
@@ -649,7 +655,8 @@
             data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
 
             headers.forEach(h => {
-                let th = document.innerHTML = h;
+                let th = document.createElement('th');
+                th.innerHTML = h;
                 thead.appendChild(th);
             });
 
@@ -707,7 +714,7 @@
         let deltaP_mH2O = 0;
         let advice = "";
         let color = "#16a34a";
-        let isOverSpeed = false;
+        let statusClass = ""; 
 
         const specVelRange = document.getElementById('specVelRange');
         const specUpperErr = document.getElementById('specUpperErr');
@@ -715,7 +722,6 @@
         const specMaxVel = document.getElementById('specMaxVel');
 
         if (type === "mag5000" || type === "mag8000") {
-            // Đồng hồ điện từ: Tổn thất cục bộ nhỏ (K ~ 0.15), chủ yếu do động năng vận tốc (v^2 / 2g)
             deltaP_mH2O = 0.15 * (Math.pow(v, 2) / (2 * 9.81));
             
             if (type === "mag5000") {
@@ -725,19 +731,22 @@
                 specMaxVel.innerText = "10.0 m/s";
 
                 if (v > 10.0) {
-                    isOverSpeed = true;
+                    statusClass = "danger-box";
                     mpe = NaN;
-                    advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vượt ngưỡng kỹ thuật của cảm biến Siemens MAG 5000. Tín hiệu đo bị bão hòa và nguy cơ xâm thực.";
+                    advice = "🚨 CẢNH BÁO NGUY HIỂM (v > 10.0 m/s): Vận tốc vượt ngưỡng kỹ thuật tối đa. Nguy cơ XÂM THỰC (cavitation) gây hư hỏng lớp lót lòng ống (Liner) bất kể đường kính ống và gây bão hòa tín hiệu đo.";
                     color = "#dc2626";
                 } else if (v >= 0.5) {
                     mpe = 0.4;
-                    advice = "Hoạt động ổn định trong dải vận tốc tối ưu (0.5 - 10 m/s). Tổn thất áp lực cực thấp.";
+                    advice = "Vận hành tối ưu: Dải vận tốc và cột áp tổn thất đạt tiêu chuẩn kỹ thuật Siemens MAG 5000.";
                 } else if (v >= 0.1) {
+                    statusClass = "warning-box";
                     mpe = 0.1 + (0.15 / v);
-                    advice = "Vận tốc thấp (0.1 - 0.5 m/s), sai số tăng nhẹ nhưng hệ thống điện lưới vẫn đảm bảo độ chính xác.";
+                    advice = "⚠️ CẢNH BÁO VẬN TỐC THẤP (v < 0.5 m/s): Tín hiệu cảm ứng điện từ yếu (dễ lẫn nhiễu). Nên cân nhắc thu hẹp đường kính ống tại vị trí đặt cảm biến để tăng vận tốc.";
+                    color = "#d97706";
                 } else {
+                    statusClass = "danger-box";
                     mpe = 0.1 + (0.15 / v);
-                    advice = "Cảnh báo: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu đáy lớn. Cần thu hẹp đường kính ống tại vị trí đặt cảm biến.";
+                    advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Vận tốc quá thấp (< 0.1 m/s). Nhiễu tín hiệu đáy vượt ngưỡng cho phép, sai số tăng vọt.";
                     color = "#dc2626";
                 }
             } else {
@@ -747,27 +756,28 @@
                 specMaxVel.innerText = "10.0 m/s";
 
                 if (v > 10.0) {
-                    isOverSpeed = true;
+                    statusClass = "danger-box";
                     mpe = NaN;
-                    advice = "🚨 CẢNH BÁO QUÁ TẢI (v > 10 m/s): Vượt dải đo max của Siemens MAG 8000. Gây sai số nghiêm trọng và hao pin nhanh.";
+                    advice = "🚨 CẢNH BÁO NGUY HIỂM (v > 10.0 m/s): Vận tốc vượt dải đo max của Siemens MAG 8000. Nguy cơ XÂM THỰC (cavitation) phá hỏng lớp lót lòng ống (Liner) và suy giảm tuổi thọ pin nhanh chóng.";
                     color = "#dc2626";
                 } else if (v >= 0.5) {
                     mpe = 0.5;
-                    advice = "Hoạt động ổn định ở dải đo tối ưu của thiết bị chạy pin. Cột áp tổn thất không đáng kể.";
+                    advice = "Vận hành tối ưu: Dải vận tốc đạt chuẩn thiết bị điện từ chạy pin.";
                 } else if (v >= 0.015) {
+                    statusClass = "warning-box";
                     mpe = 0.4 + (0.2 / v);
-                    advice = "Đo đạt tiêu chuẩn, sai số tăng dần ở lưu lượng thấp để tối ưu dòng pin quét.";
+                    advice = "⚠️ CẢNH BÁO VẬN TỐC THẤP (v < 0.5 m/s): Tín hiệu cảm ứng điện từ yếu (dễ lẫn nhiễu dòng xoáy).";
+                    color = "#d97706";
                 } else {
+                    statusClass = "danger-box";
                     mpe = 0.4 + (0.2 / v);
-                    advice = "Cảnh báo nghiêm trọng: Vận tốc chạm ngưỡng chết của cảm biến pin (< 15 mm/s). Đồng hồ không đo được.";
+                    advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Vận tốc rơi vào vùng điểm chết cảm biến (< 15 mm/s). Đồng hồ không thể ghi nhận lưu lượng.";
                     color = "#dc2626";
                 }
             }
         } 
         else if (type === "mechanical") {
-            // Đồng hồ cơ khí Woltman: ΔP tỉ lệ với (Q / Q3)^2. ISO 4064 quy định max 0.63 bar (6.3 mH2O) tại Q3 (v~2.5 m/s)
-            // Tính tổn thất thủy lực theo đặc tính tua-bin:
-            let Q3_estimate = 3500 * Math.PI * Math.pow(D / 1000, 2) / 4; // Lưu lượng danh định chuẩn theo đường kính
+            let Q3_estimate = 3500 * Math.PI * Math.pow(D / 1000, 2) / 4;
             deltaP_mH2O = 6.3 * Math.pow(Q / Q3_estimate, 2);
 
             specVelRange.innerText = "0.3 ÷ 2.5 m/s";
@@ -775,21 +785,23 @@
             specLowerErr.innerText = "± 5.00 %";
             specMaxVel.innerText = "3.0 m/s";
 
-            if (v > 3.0) {
-                isOverSpeed = true;
+            if (v > 3.0 || deltaP_mH2O > 6.3) {
+                statusClass = "danger-box";
                 mpe = NaN;
-                advice = "🚨 CẢNH BÁO VI PHẠM TCVN 8783 / ISO 4064 (v > 3.0 m/s): Lưu lượng vượt quá tải Q4/Qmax. Tổn thất cột áp rất lớn, nguy cơ hỏng tua-bin cánh quạt và mòn gối đỡ.";
+                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ (bất kể DN50 hay DN500). Vi phạm TCVN 8783 / ISO 4064!";
                 color = "#dc2626";
             } else if (v >= 0.03) {
                 mpe = 2.0;
-                advice = "Đồng hồ cơ chạy trong dải lưu lượng cao (Vùng trên Q2 đến Q3), hoạt động ổn định.";
+                advice = "Vận hành ổn định: Đồng hồ cơ chạy trong dải lưu lượng danh định (Q2 đến Q3).";
             } else if (v >= 0.015) {
+                statusClass = "warning-box";
                 mpe = 5.0;
-                advice = "Đồng hồ rơi vào vùng lưu lượng thấp (Vùng dưới Q1 đến Q2), sai số lớn (±5%). Dễ thất thoát thương mại.";
+                advice = "⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP (Q1 đến Q2): Sai số đo tăng lên ±5.0%, nguy cơ thất thoát thương mại.";
                 color = "#d97706";
             } else {
+                statusClass = "danger-box";
                 mpe = 100;
-                advice = "Cảnh báo: Hiện tượng 'Chết đồng hồ cơ học'. Nước chảy qua nhưng kim không quay (Sai số tiến về -100%).";
+                advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Hiện tượng 'Chết đồng hồ cơ học'. Nước chảy qua nhưng không đủ lực thắng ma sát tua-bin (Kim không quay).";
                 color = "#dc2626";
             }
         }
@@ -801,11 +813,11 @@
         document.getElementById('resLossBar').innerText = deltaP_bar.toFixed(3);
         
         const resultBox = document.getElementById('resultBox');
-        if (isOverSpeed) {
-            resultBox.classList.add('danger-box');
-            document.getElementById('resError').innerText = "VƯỢT GIỚI HẠN PHÁP LÝ";
+        resultBox.className = "result-box " + statusClass;
+
+        if (statusClass === "danger-box") {
+            document.getElementById('resError').innerText = "VƯỢT GIỚI HẠN KỸ THUẬT";
         } else {
-            resultBox.classList.remove('danger-box');
             if (type === "mechanical" && v < 0.015) {
                 document.getElementById('resError').innerText = "-100% (Không quay)";
             } else {
