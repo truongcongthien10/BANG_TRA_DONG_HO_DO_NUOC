@@ -77,7 +77,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* Sub controls for Mechanical */
+        /* Sub controls cho Cơ khí */
         .sub-controls {
             display: flex;
             align-items: center;
@@ -161,23 +161,38 @@
             border-collapse: collapse;
             font-size: 13.5px;
             text-align: center;
+            table-layout: fixed; /* Cố định tỉ lệ các cột cho đều */
         }
+
+        /* Phân bổ tỷ lệ độ rộng các cột (7 cột) */
+        th:nth-child(1), td:nth-child(1) { width: 14%; } /* DN */
+        th:nth-child(2), td:nth-child(2) { width: 14%; } /* Inch */
+        th:nth-child(3), td:nth-child(3) { width: 15%; } /* Q1 / Qmin */
+        th:nth-child(4), td:nth-child(4) { width: 15%; } /* Q2 / Qt */
+        th:nth-child(5), td:nth-child(5) { width: 15%; } /* Q3 / Qn */
+        th:nth-child(6), td:nth-child(6) { width: 15%; } /* Q4 / Qmax */
+        th:nth-child(7), td:nth-child(7) { width: 12%; } /* Áp lực */
 
         th {
             background-color: #005a36;
             color: white;
-            padding: 10px 8px;
+            padding: 10px 6px;
             position: sticky;
             top: 0;
             z-index: 10;
             font-weight: 600;
             border: 1px solid #004428;
+            vertical-align: middle;
+            word-wrap: break-word;
         }
 
         td {
-            padding: 8px 6px;
+            padding: 9px 6px;
             border: 1px solid #e0e0e0;
             color: #333;
+            vertical-align: middle;
+            cursor: pointer; /* Đổi con trỏ chuột thành dạng chọn */
+            transition: background-color 0.15s, color 0.15s;
         }
 
         tr:nth-child(even) {
@@ -188,9 +203,19 @@
             background-color: #eaf4ed;
         }
 
+        /* Style cho DÒNG ĐƯỢC CHỌN (Highlight) */
+        tr.selected-row {
+            background-color: #fff9c4 !important; /* Vàng nhạt */
+            color: #d32f2f !important;            /* Chữ đỏ */
+            font-weight: bold;
+        }
+
+        tr.selected-row td {
+            color: #d32f2f !important; /* Đảm bảo tất cả các ô trong dòng đều chữ đỏ */
+        }
+
         .text-bold {
             font-weight: bold;
-            color: #005a36;
         }
 
         .footer {
@@ -218,7 +243,7 @@
             <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">3. Điện Từ Điện Lưới (MAG 5000)</button>
         </div>
 
-        <!-- Cấp đồng hồ cho Cơ Khí (ẩn khi chọn Điện Từ) -->
+        <!-- Cấp đồng hồ cho Cơ Khí -->
         <div class="sub-controls" id="mechanical-sub-controls" style="display: none;">
             <label>Chọn Cấp Đồng Hồ:</label>
             <button class="sub-btn active" id="btn-cap-b" onclick="switchClass('B')">Cấp B</button>
@@ -326,16 +351,13 @@
     function switchCategory(cat) {
         currentCategory = cat;
         
-        // Cập nhật Active Tab Button
         document.getElementById('btn-co-khi').classList.toggle('active', cat === 'co_khi');
         document.getElementById('btn-pin').classList.toggle('active', cat === 'mag8000');
         document.getElementById('btn-dien').classList.toggle('active', cat === 'mag5000');
 
-        // Bật/tắt sub controls cho Cơ khí
         const subCtrl = document.getElementById('mechanical-sub-controls');
         subCtrl.style.display = (cat === 'co_khi') ? 'flex' : 'none';
 
-        // Cập nhật Chú thích & Bảng
         updateBanner();
         renderTable();
     }
@@ -367,7 +389,6 @@
         const thead = document.getElementById('tableHeader');
         const tbody = document.getElementById('tableBody');
         
-        // Clear old contents
         thead.innerHTML = '';
         tbody.innerHTML = '';
 
@@ -382,16 +403,15 @@
             ];
             data = (currentCategory === 'mag8000') ? dataMag8000 : dataMag5000;
 
-            // Render Header
             headers.forEach(h => {
                 let th = document.createElement('th');
                 th.textContent = h;
                 thead.appendChild(th);
             });
 
-            // Render Body
             data.forEach(row => {
                 let tr = document.createElement('tr');
+                tr.onclick = function() { selectRow(this); }; // Thêm sự kiện click chọn dòng
                 tr.innerHTML = `
                     <td class="text-bold">${row.dn}</td>
                     <td>${row.inch}</td>
@@ -404,7 +424,6 @@
                 tbody.appendChild(tr);
             });
         } else {
-            // Cơ Khí
             headers = [
                 'Kích cỡ (DN)', 'Tương ứng (Inch)', 
                 'Lưu lượng tối thiểu (Qmin)', 'Lưu lượng chuyển tiếp (Qt)', 
@@ -412,16 +431,15 @@
             ];
             data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
 
-            // Render Header
             headers.forEach(h => {
                 let th = document.createElement('th');
                 th.textContent = h;
                 thead.appendChild(th);
             });
 
-            // Render Body
             data.forEach(row => {
                 let tr = document.createElement('tr');
+                tr.onclick = function() { selectRow(this); }; // Thêm sự kiện click chọn dòng
                 tr.innerHTML = `
                     <td class="text-bold">${row.dn}</td>
                     <td>${row.inch}</td>
@@ -435,8 +453,17 @@
             });
         }
 
-        // Tự động áp dụng lại bộ lọc nếu có text tìm kiếm
         filterTable();
+    }
+
+    // Hàm xử lý highlight khi bấm vào dòng
+    function selectRow(row) {
+        // Bỏ highlight ở tất cả các dòng khác
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach(r => r.classList.remove('selected-row'));
+        
+        // Thêm class highlight vào dòng vừa được click
+        row.classList.add('selected-row');
     }
 
     // Hàm Lọc theo ô tìm kiếm
