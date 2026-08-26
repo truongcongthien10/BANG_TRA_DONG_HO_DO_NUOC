@@ -40,49 +40,44 @@
             letter-spacing: 0.5px;
         }
 
-        /* DIEU KHIEN TAB CHINH */
+        /* ĐIỀU KHIỂN TAB CHÍNH */
         .main-controls {
-            padding: 15px;
+            padding: 12px 15px;
             background-color: #ffffff;
             border-bottom: 1px solid #e0e0e0;
         }
 
         .tab-group {
             display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
+            gap: 8px;
             width: 100%;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 10px 12px;
+            padding: 12px 8px;
             border: 1px solid #cccccc;
             background-color: #f1f3f5;
-            color: #495057;
-            font-weight: 600;
-            border-radius: 6px;
+            color: #333333;
+            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             font-size: 13.5px;
             text-align: center;
+            outline: none;
         }
 
         .tab-btn:hover {
-            background-color: #e9ecef;
-            border-color: #adb5bd;
+            background-color: #e2e8f0;
         }
 
+        /* TAB KHI ĐƯỢC CHỌN - SHADE MÀU VÀNG NHẠT TOÀN BỘ BUTTON */
         .tab-btn.active {
-            background-color: #005a36;
-            color: #ffffff;
-            border-color: #004428;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
-        }
-
-        .tab-btn.calc-tab-btn.active {
-            background-color: #0284c7;
-            border-color: #0369a1;
+            background-color: #fff9c4 !important;
+            color: #b91c1c !important;
+            border: 2px solid #d97706 !important;
+            box-shadow: inset 0 0 0 1px #f59e0b, 0 2px 4px rgba(0,0,0,0.08);
         }
 
         /* TAB TÍNH TOÁN SAI SỐ */
@@ -140,7 +135,7 @@
 
         .btn-calc {
             width: 100%;
-            padding: 10px;
+            padding: 11px;
             background-color: #0284c7;
             color: white;
             border: none;
@@ -171,9 +166,9 @@
 
         .result-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .result-item {
@@ -190,11 +185,43 @@
             font-size: 13.5px;
             padding-top: 8px;
             border-top: 1px dashed #bae6fd;
-            line-height: 1.4;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
 
         .danger-box .advice-item {
             border-top-color: #fca5a5;
+        }
+
+        /* KHU VỰC THÔNG SỐ SO SÁNH TIÊU CHUẨN KỸ THUẬT */
+        .spec-compare-box {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            padding: 10px 12px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .spec-title {
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+            color: #334155;
+        }
+
+        .spec-grid div span {
+            font-weight: bold;
+            color: #0284c7;
         }
 
         /* TAB BẢNG TRA CỨU */
@@ -231,8 +258,9 @@
         }
 
         .sub-btn.active {
-            background-color: #005a36;
-            color: #fff;
+            background-color: #fff9c4 !important;
+            color: #b91c1c !important;
+            border: 1px solid #d97706 !important;
         }
 
         .search-box {
@@ -358,20 +386,20 @@
         Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
     </div>
 
-    <!-- KHU VỰC THANH TAB ĐIỀU HƯỚNG CHÍNH -->
+    <!-- THANH TAB NỀN VÀNG NHẠT KHI ĐƯỢC CHỌN -->
     <div class="main-controls">
         <div class="tab-group">
             <button class="tab-btn active" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
             <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
             <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
-            <button class="tab-btn calc-tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số Sơ Bộ</button>
+            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">🧮 4. Tính Sai Số Sơ Bộ</button>
         </div>
     </div>
 
-    <!-- TAB HÀM TÍNH TOÁN SAI SỐ SƠ BỘ -->
+    <!-- TAB TÍNH TOÁN SAI SỐ -->
     <div class="calc-view" id="calcView">
         <div class="calc-card">
-            <h3>Công Cụ Tính Toán Vận Tốc & Sai Số Sơ Bộ (TCVN 8783 / ISO 4064)</h3>
+            <h3>Công Cụ Tính Toán Vận Tốc & Sai Số Sơ Bộ</h3>
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
@@ -400,12 +428,26 @@
                     <div class="result-item">Vận tốc dòng chảy (v): <span id="resVelocity" class="result-value">0</span> m/s</div>
                     <div class="result-item">Giới hạn sai số sơ bộ (MPE): <span id="resError" class="result-value">0</span></div>
                 </div>
-                <div class="advice-item">Khuyến nghị kỹ thuật & Tiêu chuẩn: <span id="resAdvice" style="font-weight: bold;"></span></div>
+                
+                <div class="advice-item">
+                    Khuyến nghị kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
+                </div>
+
+                <!-- BỔ SUNG KHU VỰC THÔNG SỐ KỸ THUẬT TIÊU CHUẨN ĐỂ SO SÁNH -->
+                <div class="spec-compare-box">
+                    <div class="spec-title">📋 Thông số kỹ thuật & Sai số cơ bản thiết bị được chọn (Chuẩn hãng / ISO 4064):</div>
+                    <div class="spec-grid">
+                        <div>Dải vận tốc chuẩn: <span id="specVelRange">-</span></div>
+                        <div>Sai số Vùng Trên (Q₂ - Q₄): <span id="specUpperErr">-</span></div>
+                        <div>Sai số Vùng Dưới (Q₁ - Q₂): <span id="specLowerErr">-</span></div>
+                        <div>Vận tốc tối đa cho phép ($v_{max}$): <span id="specMaxVel" style="color: #dc2626;">-</span></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB KHU VỰC TRA CỨU DANH MỤC -->
+    <!-- TAB TRA CỨU DANH MỤC -->
     <div class="lookup-view" id="lookupView">
         <div style="padding: 0 15px 15px 15px;">
             <div class="sub-controls" id="mechanical-sub-controls" style="display: none;">
@@ -645,7 +687,7 @@
         }
     }
 
-    // --- TÍNH TOÁN SAI SỐ SƠ BỘ VÀ KIỂM TRA GIỚI HẠN VẬN TỐC TỐI ĐA ---
+    // --- TÍNH TOÁN SAI SỐ SƠ BỘ VÀ HIỂN THỊ THÔNG SỐ SO SÁNH ---
     function tinhToanSaiSo() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
@@ -662,7 +704,18 @@
         let color = "#16a34a";
         let isOverSpeed = false;
 
+        // Cập nhật thông số tiêu chuẩn để so sánh
+        const specVelRange = document.getElementById('specVelRange');
+        const specUpperErr = document.getElementById('specUpperErr');
+        const specLowerErr = document.getElementById('specLowerErr');
+        const specMaxVel = document.getElementById('specMaxVel');
+
         if (type === "mag5000") {
+            specVelRange.innerText = "0.5 ÷ 10.0 m/s";
+            specUpperErr.innerText = "± 0.40 %";
+            specLowerErr.innerText = "± 0.50 %";
+            specMaxVel.innerText = "10.0 m/s";
+
             if (v > 10.0) {
                 isOverSpeed = true;
                 mpe = NaN;
@@ -681,6 +734,11 @@
             }
         } 
         else if (type === "mag8000") {
+            specVelRange.innerText = "0.5 ÷ 10.0 m/s";
+            specUpperErr.innerText = "± 0.50 %";
+            specLowerErr.innerText = "± 0.80 %";
+            specMaxVel.innerText = "10.0 m/s";
+
             if (v > 10.0) {
                 isOverSpeed = true;
                 mpe = NaN;
@@ -699,6 +757,11 @@
             }
         } 
         else if (type === "mechanical") {
+            specVelRange.innerText = "0.3 ÷ 2.5 m/s";
+            specUpperErr.innerText = "± 2.00 %";
+            specLowerErr.innerText = "± 5.00 %";
+            specMaxVel.innerText = "3.0 m/s";
+
             if (v > 3.0) {
                 isOverSpeed = true;
                 mpe = NaN;
