@@ -21,7 +21,7 @@
 
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1150px;
             background: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -48,13 +48,13 @@
 
         .tab-group {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px 8px;
+            padding: 12px 6px;
             border: 1px solid #cccccc;
             background-color: #f1f3f5;
             color: #333333;
@@ -62,7 +62,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            font-size: 13.5px;
+            font-size: 13px;
             text-align: center;
             outline: none;
         }
@@ -117,7 +117,6 @@
             color: #475569;
         }
 
-        /* Ẩn nút tăng giảm số */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -223,7 +222,7 @@
             border-radius: 5px;
             padding: 10px 12px;
             margin-top: 8px;
-            font-size: 13px;
+            font-size: 12.5px;
         }
 
         .spec-title {
@@ -235,16 +234,25 @@
             letter-spacing: 0.3px;
         }
 
+        /* Dãn dòng và chia cột rộng hơn để chữ không bị rớt hàng */
         .spec-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 8px;
+            grid-template-columns: 1fr 1fr 1fr 1.2fr;
+            gap: 10px;
             color: #334155;
+            align-items: center;
+        }
+
+        @media (max-width: 850px) {
+            .spec-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
         }
 
         .spec-grid div span {
             font-weight: bold;
             color: #0284c7;
+            white-space: nowrap; /* Giữ không cho ngắt chữ s */
         }
 
         .lookup-view {
@@ -415,10 +423,11 @@
 
     <div class="main-controls">
         <div class="tab-group">
-            <button class="tab-btn" id="btn-pin" onclick="switchCategory('mag8000')">1. Điện Từ Chạy Pin (MAG 8000)</button>
-            <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Điện Từ Điện Lưới (MAG 5000)</button>
-            <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">3. Đồng Hồ Cơ Khí</button>
-            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">📊 4. Tính Sai Số & Tổn Thất Áp Lực</button>
+            <button class="tab-btn" id="btn-pin" onclick="switchCategory('mag8000')">1. Siemens MAG 8000 (Pin)</button>
+            <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Siemens MAG 5000 (Lưới)</button>
+            <button class="tab-btn" id="btn-aichi" onclick="switchCategory('aichi_su')">3. Aichi Tokei SU (Nhật)</button>
+            <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">4. Đồng Hồ Cơ Khí</button>
+            <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">📊 5. Tính Sai Số & Thủy Lực</button>
         </div>
     </div>
 
@@ -442,6 +451,7 @@
                     <select id="meterType" onfocus="this.select()" onchange="tinhToanThuyLuc()">
                         <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
                         <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
+                        <option value="aichi_su">Aichi Tokei SU (Điện từ Nhật - R400)</option>
                         <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C - Woltman)</option>
                     </select>
                 </div>
@@ -546,6 +556,20 @@
         { dn: "DN600", inch: '24"', q1: "25.0", q2: "40.0", q3: "6300", q4: "7875", pn: "PN16" }
     ];
 
+    // DỮ LIỆU CHÍNH XÁC CỦA ĐỒNG HỒ ĐIỆN TỪ AICHI TOKEI SU SERIES (R400)
+    const dataAichiSU = [
+        { dn: "DN40", inch: '1 1/2"', q1: "0.063", q2: "0.100", q3: "25.0", q4: "31.25", pn: "PN16" },
+        { dn: "DN50", inch: '2"', q1: "0.100", q2: "0.160", q3: "40.0", q4: "50.00", pn: "PN16" },
+        { dn: "DN65", inch: '2 1/2"', q1: "0.160", q2: "0.250", q3: "63.0", q4: "78.75", pn: "PN16" },
+        { dn: "DN80", inch: '3"', q1: "0.250", q2: "0.400", q3: "100.0", q4: "125.00", pn: "PN16" },
+        { dn: "DN100", inch: '4"', q1: "0.400", q2: "0.630", q3: "160.0", q4: "200.00", pn: "PN16" },
+        { dn: "DN125", inch: '5"', q1: "0.630", q2: "1.000", q3: "250.0", q4: "312.50", pn: "PN16" },
+        { dn: "DN150", inch: '6"', q1: "1.000", q2: "1.600", q3: "400.0", q4: "500.00", pn: "PN16" },
+        { dn: "DN200", inch: '8"', q1: "1.575", q2: "2.500", q3: "630.0", q4: "787.50", pn: "PN16" },
+        { dn: "DN250", inch: '10"', q1: "2.500", q2: "4.000", q3: "1000.0", q4: "1250.00", pn: "PN16" },
+        { dn: "DN300", inch: '12"', q1: "2.500", q2: "4.000", q3: "1000.0", q4: "1250.00", pn: "PN16" }
+    ];
+
     const dataCoKhiB = [
         { dn: "DN15", inch: '1/2"', qmin: "0.03", qt: "0.12", qn: "1.5", qmax: "3.0", pn: "PN10/16" },
         { dn: "DN20", inch: '3/4"', qmin: "0.05", qt: "0.20", qn: "2.5", qmax: "5.0", pn: "PN10/16" },
@@ -577,6 +601,7 @@
 
         if (cat === 'mag8000') document.getElementById('btn-pin').classList.add('active');
         if (cat === 'mag5000') document.getElementById('btn-dien').classList.add('active');
+        if (cat === 'aichi_su') document.getElementById('btn-aichi').classList.add('active');
         if (cat === 'co_khi') document.getElementById('btn-co-khi').classList.add('active');
         if (cat === 'tinh_sai_so') document.getElementById('btn-tinh-sai-so').classList.add('active');
 
@@ -612,6 +637,8 @@
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h`;
         } else if (currentCategory === 'mag5000') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 5000 (Điện Lưới 220V/24V) | Bộ truyền tín hiệu chính xác cao | Đơn vị: m³/h`;
+        } else if (currentCategory === 'aichi_su') {
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> AICHI TOKEI DENKI - SU Series (Điện từ Nhật Bản - Dải đo siêu rộng R400, Cực đại DN300) | Đơn vị: m³/h`;
         } else if (currentCategory === 'co_khi') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> Đồng hồ nước Cơ khí - <strong>Cấp ${currentClass}</strong> (Theo tiêu chuẩn ISO 4064 / TCVN 5621) | Đơn vị: m³/h`;
         }
@@ -627,7 +654,7 @@
         let data = [];
         let headers = [];
 
-        if (currentCategory === 'mag8000' || currentCategory === 'mag5000') {
+        if (currentCategory === 'mag8000' || currentCategory === 'mag5000' || currentCategory === 'aichi_su') {
             headers = [
                 'Kích cỡ<br>(DN)', 
                 'Tương ứng<br>(Inch)', 
@@ -637,7 +664,10 @@
                 'Lưu lượng<br>quá tải (Q<sub>4</sub>)', 
                 'Áp lực<br>làm việc'
             ];
-            data = (currentCategory === 'mag8000') ? dataMag8000 : dataMag5000;
+
+            if (currentCategory === 'mag8000') data = dataMag8000;
+            else if (currentCategory === 'mag5000') data = dataMag5000;
+            else if (currentCategory === 'aichi_su') data = dataAichiSU;
 
             headers.forEach(h => {
                 let th = document.createElement('th');
@@ -738,8 +768,41 @@
         const specLowerErr = document.getElementById('specLowerErr');
         const specMaxVel = document.getElementById('specMaxVel');
 
-        if (type === "mag5000" || type === "mag8000") {
-            // Tổn thất áp lực qua đồng hồ điện từ chuẩn ISO 4064 (Cực đại DeltaP <= 1.6mH2O tại v = 3m/s)
+        // BỔ SUNG ĐỒNG HỒ AICHI TOKEI SU (NHẬT BẢN)
+        if (type === "aichi_su") {
+            deltaP_mH2O = 0.10 * Math.pow(v / 3.0, 2); // Tổn thất cực kỳ thấp
+
+            specVelRange.innerText = "0.2 ÷ 8.0 m/s";
+            specUpperErr.innerText = "± 0.35 %";
+            specLowerErr.innerText = "± 0.50 %";
+            specMaxVel.innerText = "8.0 m/s";
+
+            if (D > 300) {
+                statusClass = "danger-box";
+                mpe = NaN;
+                advice = "🚨 CẢNH BÁO KÍCH CỠ: Đồng hồ điện từ Aichi Tokei SU Series chỉ sản xuất tối đa đến cỡ DN300. Với đường kính DN" + D + "mm, vui lòng chuyển sang Siemens MAG 8000 hoặc MAG 5000!";
+                color = "#dc2626";
+            } else if (v > 8.0) {
+                statusClass = "danger-box";
+                mpe = NaN;
+                advice = "🚨 CẢNH BÁO VẬN TỐC QUÁ CAO (v > 8.0 m/s): Vượt ngưỡng vận tốc vận hành an toàn của Aichi Tokei SU. Nguy cơ xâm thực xói mòn lòng cảm biến!";
+                color = "#dc2626";
+            } else if (v >= 0.2) {
+                mpe = 0.35;
+                advice = "Vận hành cực kỳ tối ưu: Aichi Tokei SU đạt độ chính xác siêu cao (Dải đo R400), dòng chảy ổn định.";
+            } else if (v >= 0.01) {
+                statusClass = "warning-box";
+                mpe = 0.50;
+                advice = "⚠️ VÙNG LƯU LƯỢNG THẤP: Cảm biến Aichi Tokei SU vẫn ghi nhận được nhờ tần số phát xung 0.3s nhưng sai số tăng nhẹ lên ±0.50%.";
+                color = "#d97706";
+            } else {
+                statusClass = "danger-box";
+                mpe = 1.0;
+                advice = "🚨 CẢNH BÁO BẤT THƯỜNG: Dòng chảy quá bé (< 10 mm/s) dưới ngưỡng bắt đầu đo của thiết bị.";
+                color = "#dc2626";
+            }
+        }
+        else if (type === "mag5000" || type === "mag8000") {
             deltaP_mH2O = 0.16 * Math.pow(v / 3.0, 2);
             
             if (type === "mag5000") {
@@ -824,7 +887,6 @@
             }
         }
 
-        // Quy đổi chuẩn thủy lực cấp nước 1 bar = 10 mH2O
         const deltaP_bar = deltaP_mH2O / 10.0;
 
         document.getElementById('resVelocity').innerText = v.toFixed(3);
