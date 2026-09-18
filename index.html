@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước</title>
+    <title>Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước - HueWACO</title>
     <style>
         * {
             box-sizing: border-box;
@@ -115,6 +115,16 @@
             font-size: 13px;
             font-weight: bold;
             color: #475569;
+        }
+
+        /* Ẩn nút tăng giảm số */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
 
         .form-group input, .form-group select {
@@ -377,7 +387,6 @@
             font-weight: bold;
         }
 
-        /* Tối ưu style Footer chuẩn xác theo ảnh chụp */
         .footer {
             padding: 12px 20px;
             background-color: #ffffff;
@@ -393,6 +402,7 @@
 
         .footer-dept span.highlight {
             font-weight: bold;
+            color: #005a36;
         }
     </style>
 </head>
@@ -400,7 +410,7 @@
 
 <div class="container">
     <div class="header">
-        Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước
+        Danh Mục & Tính Toán Thiết Kế Đồng Hồ Nước - HueWACO
     </div>
 
     <div class="main-controls">
@@ -419,17 +429,17 @@
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
-                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 1500" onfocus="this.select()" required>
+                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 150" onfocus="this.select()" oninput="tinhToanThuyLuc()" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="diameter">Đường kính đồng hồ nước DN (mm):</label>
-                    <input type="number" id="diameter" placeholder="Ví dụ: 500" onfocus="this.select()" required>
+                    <input type="number" id="diameter" placeholder="Ví dụ: 150" onfocus="this.select()" oninput="tinhToanThuyLuc()" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="meterType">Loại đồng hồ dự kiến:</label>
-                    <select id="meterType" onfocus="this.select()">
+                    <select id="meterType" onfocus="this.select()" onchange="tinhToanThuyLuc()">
                         <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
                         <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
                         <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C - Woltman)</option>
@@ -712,7 +722,7 @@
         const type = document.getElementById('meterType').value;
         
         if (isNaN(Q) || isNaN(D) || Q <= 0 || D <= 0) {
-            alert("Vui lòng nhập giá trị Lưu lượng và Đường kính hợp lệ lớn hơn 0.");
+            document.getElementById('resultBox').style.display = 'none';
             return;
         }
 
@@ -729,7 +739,8 @@
         const specMaxVel = document.getElementById('specMaxVel');
 
         if (type === "mag5000" || type === "mag8000") {
-            deltaP_mH2O = 0.15 * (Math.pow(v, 2) / (2 * 9.81));
+            // Tổn thất áp lực qua đồng hồ điện từ chuẩn ISO 4064 (Cực đại DeltaP <= 1.6mH2O tại v = 3m/s)
+            deltaP_mH2O = 0.16 * Math.pow(v / 3.0, 2);
             
             if (type === "mag5000") {
                 specVelRange.innerText = "0.5 ÷ 10.0 m/s";
@@ -795,7 +806,7 @@
             if (v > 3.0 || deltaP_mH2O > 6.3) {
                 statusClass = "danger-box";
                 mpe = NaN;
-                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ (bất kể DN50 hay DN500). Vi phạm TCVN 8783 / ISO 4064!";
+                advice = "🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC (v > 3.0 m/s hoặc ΔP > 0.63 bar): Vận tốc lớn tạo ra LỰC QUÁN TÍNH CƠ HỌC QUÁ LỚN lên trục tua-bin, làm tăng tổn thất cột áp và dẫn đến mòn nhanh gối đỡ. Vi phạm TCVN 8783 / ISO 4064!";
                 color = "#dc2626";
             } else if (v >= 0.03) {
                 mpe = 2.0;
@@ -813,7 +824,8 @@
             }
         }
 
-        const deltaP_bar = deltaP_mH2O * 0.0980665;
+        // Quy đổi chuẩn thủy lực cấp nước 1 bar = 10 mH2O
+        const deltaP_bar = deltaP_mH2O / 10.0;
 
         document.getElementById('resVelocity').innerText = v.toFixed(3);
         document.getElementById('resLossHead').innerText = deltaP_mH2O.toFixed(2);
