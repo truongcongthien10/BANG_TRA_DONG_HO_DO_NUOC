@@ -744,7 +744,7 @@
         }
     }
 
-    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO 3 DÒNG TỐI ƯU
+    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO 3 DÒNG TỐI ƯU (ĐÃ LOẠI BỎ MỤC GỢI Ý RƯỜM RÀ)
     function tinhToanThuyLuc() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
@@ -807,36 +807,32 @@
             mpe = NaN;
             color = "#dc2626";
 
-            // Lọc danh sách các cỡ đồng hồ lớn hơn thỏa mãn Q <= Q4
+            // Tìm cỡ đồng hồ lớn hơn đầu tiên thỏa mãn Q <= Q3 (danh định) hoặc Q <= Q4
             let biggerMeters = dbSource.filter(item => {
                 let itemQ4 = parseFloat(item.q4 || item.qmax);
                 let itemDN = parseInt(item.dn.replace("DN", ""));
                 return itemDN > D && Q <= itemQ4;
             });
 
-            let biggerListStr = "";
             let optimalSuggestStr = "";
 
             if (biggerMeters.length > 0) {
-                let availableDNs = biggerMeters.map(m => m.dn + " (Q₄=" + (m.q4 || m.qmax) + " m³/h)").join(", ");
-                biggerListStr = `Các cỡ đồng hồ ${meterName} lớn hơn phù hợp: <b>${availableDNs}</b>.`;
-                
                 let optimal = biggerMeters.find(m => Q <= parseFloat(m.q3 || m.qn)) || biggerMeters[0];
-                optimalSuggestStr = ` 👉 Đề xuất lựa chọn tối ưu: <b>${optimal.dn}</b> (${meterName}).`;
+                let optQ4 = optimal.q4 || optimal.qmax;
+                optimalSuggestStr = ` 👉 Đề xuất lựa chọn đồng hồ phù hợp nhất: <b>${optimal.dn}</b> - ${meterName} (Có Q₄ = ${optQ4} m³/h).`;
             } else {
-                biggerListStr = `Đã vượt quá dải đo của toàn bộ các cỡ thuộc dòng ${meterName}.`;
-                optimalSuggestStr = ` 👉 Đề xuất: Chuyển sang Siemens MAG 5000 (Điện lưới) hoặc kích thước ống lớn hơn!`;
+                optimalSuggestStr = ` 👉 Đề xuất lựa chọn đồng hồ phù hợp nhất: Chuyển sang dòng <b>Siemens MAG 5000 (Điện lưới)</b> hoặc tăng kích thước đường ống!`;
             }
 
             adviceHtml = `
                 <div style="color: #dc2626; font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">
-                    🚨 VƯỢT QUÁ LƯU LƯỢNG LỚN NHẤT: Q₄ = ${q4} m³/h (Lưu lượng tính toán Q = ${Q} m³/h)
+                    🚨 VƯỢT QUÁ LƯU LƯỢNG LỚN NHẤT: Q₄ = ${q4} m³/h (LƯU LƯỢNG TÍNH TOÁN Q = ${Q} m³/h)
                 </div>
                 <div style="color: #991b1b; font-size: 13.5px; margin-bottom: 6px;">
-                    ⚠️ <b>Cảnh báo nguy cơ:</b> Dòng chảy quá tải làm bão hòa cảm biến điện từ, sụt áp tăng vọt và gây sai số đo nghiêm trọng. Cần thay thế hoặc lựa chọn lại cỡ đồng hồ phù hợp.
+                    ⚠️ <b>Cảnh báo nguy cơ:</b> Lưu lượng quá tải ảnh hưởng đến sai số của đồng hồ. Cần thay thế hoặc lựa chọn lại cỡ đồng hồ phù hợp.
                 </div>
-                <div style="color: #1e3a8a; font-size: 13.5px; background: #eff6ff; padding: 6px 10px; border-radius: 4px; border: 1px solid #bfdbfe;">
-                    📌 <b>Gợi ý thay thế:</b> ${biggerListStr}${optimalSuggestStr}
+                <div style="color: #1e3a8a; font-size: 13.5px; background: #eff6ff; padding: 8px 10px; border-radius: 4px; border: 1px solid #bfdbfe;">
+                    📌 ${optimalSuggestStr}
                 </div>
             `;
         } 
@@ -854,7 +850,7 @@
                     Lưu lượng tính toán Q = ${Q} m³/h nằm giữa Q₃ (${q3} m³/h) và Q₄ (${q4} m³/h) của ${dnStr}. Vận hành liên tục trong vùng này sẽ suy giảm nhanh tuổi thọ gối đỡ/mạch điện.
                 </div>
                 <div style="color: #451a03; font-size: 13px; font-style: italic;">
-                    📌 Đề xuất: Nên cân nhắc nâng cỡ đồng hồ lên cỡ kế tiếp để đảm bảo thiết bị hoạt động ổn định lâu dài.
+                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Nên nâng cỡ đồng hồ lên cỡ kế tiếp để đảm bảo thiết bị hoạt động ổn định lâu dài.
                 </div>
             `;
         }
@@ -871,7 +867,7 @@
                     Dải vận tốc dòng chảy v = ${v.toFixed(3)} m/s và lưu lượng Q = ${Q} m³/h đạt dải đo chính xác cao nhất (MPE ±${mpe.toFixed(2)}%) của thiết bị ${meterName} ${dnStr}.
                 </div>
                 <div style="color: #166534; font-size: 13px; font-style: italic;">
-                    📌 Kết luận: Lựa chọn kích cỡ đồng hồ hoàn toàn đáp ứng các yêu cầu kinh tế và tiêu chuẩn kỹ thuật.
+                    📌 Kết luận: Lựa chọn kích cỡ đồng hồ hiện tại hoàn toàn đáp ứng các yêu cầu kinh tế và tiêu chuẩn kỹ thuật.
                 </div>
             `;
         }
@@ -889,7 +885,7 @@
                     Lưu lượng rơi vào dải đo dưới làm gia tăng sai số đo lường lên ±${mpe.toFixed(2)}%. Tín hiệu cảm biến điện từ yếu hoặc lực quay tua-bin suy giảm.
                 </div>
                 <div style="color: #451a03; font-size: 13px; font-style: italic;">
-                    📌 Đề xuất: Nên thu hẹp đường kính ống tại đoạn đặt đồng hồ hoặc giảm cỡ đồng hồ để tăng vận tốc dòng chảy.
+                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Thu hẹp đường kính ống tại vị trí đặt đồng hồ hoặc chọn cỡ đồng hồ nhỏ hơn.
                 </div>
             `;
         }
@@ -907,7 +903,7 @@
                     Lưu lượng Q = ${Q} m³/h quá nhỏ, nằm ngoài ngưỡng ghi nhận Q₁ = ${q1} m³/h của ${meterName} ${dnStr}. Đồng hồ sẽ bỏ sót lưu lượng, gây thất thoát thương mại lớn!
                 </div>
                 <div style="color: #7f1d1d; font-size: 13px; font-style: italic;">
-                    📌 Đề xuất: Giảm mạnh cỡ đồng hồ hoặc chuyển sang loại đồng hồ điện từ có tỷ số R cao hơn (Ví dụ: Aichi SU R400).
+                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Giảm mạnh cỡ đồng hồ hoặc chuyển sang loại đồng hồ điện từ có tỷ số R cao hơn (Ví dụ: Aichi SU R400).
                 </div>
             `;
         }
