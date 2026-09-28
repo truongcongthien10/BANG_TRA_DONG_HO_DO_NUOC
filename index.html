@@ -328,6 +328,13 @@
             font-size: 13px;
             color: #555;
             font-style: italic;
+            line-height: 1.5;
+        }
+
+        .info-note a {
+            color: #0284c7;
+            font-weight: bold;
+            text-decoration: underline;
         }
 
         .table-wrapper {
@@ -345,11 +352,11 @@
 
         th:nth-child(1), td:nth-child(1) { width: 12%; }
         th:nth-child(2), td:nth-child(2) { width: 14%; }
-        th:nth-child(3), td:nth-child(3) { width: 14%; }
+        th:nth-child(3), td:nth-child(3) { width: 15%; }
         th:nth-child(4), td:nth-child(4) { width: 15%; }
         th:nth-child(5), td:nth-child(5) { width: 15%; }
         th:nth-child(6), td:nth-child(6) { width: 15%; }
-        th:nth-child(7), td:nth-child(7) { width: 15%; }
+        th:nth-child(7), td:nth-child(7) { width: 14%; }
 
         th {
             background-color: #005a36;
@@ -361,7 +368,15 @@
             font-weight: 600;
             border: 1px solid #004428;
             vertical-align: middle;
-            line-height: 1.3;
+            line-height: 1.35;
+        }
+
+        .th-err {
+            font-size: 0.78rem;
+            color: #fef08a;
+            font-weight: normal;
+            display: block;
+            margin-top: 2px;
         }
 
         td {
@@ -637,7 +652,7 @@
         } else if (currentCategory === 'mag5000') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 5000 (Điện Lưới 220V/24V) | Độ chính xác cao R160 - R250 | Đơn vị: m³/h`;
         } else if (currentCategory === 'aichi_su') {
-            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> AICHI TOKEI DENKI - Dòng SU-KF (Điện từ Nhật Bản - Tiêu chuẩn ISO 4064 / OIML R49 - Dải đo cực rộng R250 - R400) | Đơn vị: m³/h`;
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> AICHI TOKEI DENKI - Dòng SU-KF (Điện từ Nhật Bản - Tiêu chuẩn ISO 4064 / OIML R49 - Dải đo cực rộng R250 - R400) | Đơn vị: m³/h<br>🔗 <a href="https://www.aichitokei.co.jp/eng/" target="_blank" rel="noopener noreferrer">Tài liệu đặc tính kỹ thuật chính thức của Aichi Tokei Denki</a>`;
         } else if (currentCategory === 'co_khi') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> Đồng hồ nước Cơ khí - <strong>Cấp ${currentClass}</strong> (Theo tiêu chuẩn ISO 4064 / TCVN 5621) | Đơn vị: m³/h`;
         }
@@ -657,10 +672,10 @@
             headers = [
                 'Kích cỡ<br>(DN)', 
                 'Tương ứng<br>(Inch)', 
-                'Lưu lượng<br>tối thiểu (Q<sub>1</sub>)', 
-                'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)', 
-                'Lưu lượng<br>danh định (Q<sub>3</sub>)', 
-                'Lưu lượng<br>quá tải (Q<sub>4</sub>)', 
+                'Lưu lượng<br>tối thiểu (Q<sub>1</sub>)<span class="th-err">(±5%)</span>', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)<span class="th-err">(±2%)</span>', 
+                'Lưu lượng<br>danh định (Q<sub>3</sub>)<span class="th-err">(±2%)</span>', 
+                'Lưu lượng<br>quá tải (Q<sub>4</sub>)<span class="th-err">(±2%)</span>', 
                 'Tỷ số R & Áp lực'
             ];
 
@@ -690,11 +705,11 @@
             headers = [
                 'Kích cỡ<br>(DN/mm)', 
                 'Model tương ứng', 
-                'Lưu lượng<br>tối thiểu (Q<sub>1</sub>)', 
-                'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)', 
-                'Lưu lượng<br>định mức (Q<sub>3</sub>)', 
-                'Lưu lượng<br>tối đa (Q<sub>4</sub>)', 
-                'Tỷ số dải đo (R)'
+                'Lưu lượng<br>tối thiểu Q<sub>1</sub><span class="th-err">(±5%)</span>', 
+                'Lưu lượng<br>chuyển tiếp Q<sub>2</sub><span class="th-err">(±2%)</span>', 
+                'Lưu lượng<br>định mức Q<sub>3</sub><span class="th-err">(±2%)</span>', 
+                'Lưu lượng<br>tối đa Q<sub>4</sub><span class="th-err">(±2%)</span>', 
+                'Tỷ số dải đo<br>(R = Q<sub>3</sub>/Q<sub>1</sub>)'
             ];
 
             data = dataAichiSU;
@@ -723,10 +738,10 @@
             headers = [
                 'Kích cỡ<br>(DN)', 
                 'Tương ứng<br>(Inch)', 
-                'Lưu lượng<br>tối thiểu (Q<sub>min</sub>)', 
-                'Lưu lượng<br>chuyển tiếp (Q<sub>t</sub>)', 
-                'Lưu lượng<br>danh định (Q<sub>n</sub>)', 
-                'Lưu lượng<br>tối đa (Q<sub>max</sub>)', 
+                'Lưu lượng<br>tối thiểu (Q<sub>min</sub>)<span class="th-err">(±5%)</span>', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>t</sub>)<span class="th-err">(±2%)</span>', 
+                'Lưu lượng<br>danh định (Q<sub>n</sub>)<span class="th-err">(±2%)</span>', 
+                'Lưu lượng<br>tối đa (Q<sub>max</sub>)<span class="th-err">(±2%)</span>', 
                 'Áp lực<br>làm việc'
             ];
             data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
@@ -961,7 +976,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedTab = localStorage.getItem('activeWaterMeterTab') || 'mag8000';
+        const savedTab = localStorage.getItem('activeWaterMeterTab') || 'aichi_su';
         switchCategory(savedTab);
     });
 </script>
