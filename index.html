@@ -343,13 +343,13 @@
             table-layout: fixed;
         }
 
-        th:nth-child(1), td:nth-child(1) { width: 13%; }
-        th:nth-child(2), td:nth-child(2) { width: 13%; }
-        th:nth-child(3), td:nth-child(3) { width: 15%; }
+        th:nth-child(1), td:nth-child(1) { width: 12%; }
+        th:nth-child(2), td:nth-child(2) { width: 14%; }
+        th:nth-child(3), td:nth-child(3) { width: 14%; }
         th:nth-child(4), td:nth-child(4) { width: 15%; }
         th:nth-child(5), td:nth-child(5) { width: 15%; }
         th:nth-child(6), td:nth-child(6) { width: 15%; }
-        th:nth-child(7), td:nth-child(7) { width: 14%; }
+        th:nth-child(7), td:nth-child(7) { width: 15%; }
 
         th {
             background-color: #005a36;
@@ -424,7 +424,7 @@
         <div class="tab-group">
             <button class="tab-btn" id="btn-pin" onclick="switchCategory('mag8000')">1. Siemens MAG 8000 (Pin)</button>
             <button class="tab-btn" id="btn-dien" onclick="switchCategory('mag5000')">2. Siemens MAG 5000 (Lưới)</button>
-            <button class="tab-btn" id="btn-aichi" onclick="switchCategory('aichi_su')">3. Aichi Tokei SU (Nhật)</button>
+            <button class="tab-btn" id="btn-aichi" onclick="switchCategory('aichi_su')">3. Aichi Tokei SU-KF (Nhật)</button>
             <button class="tab-btn" id="btn-co-khi" onclick="switchCategory('co_khi')">4. Đồng Hồ Cơ Khí</button>
             <button class="tab-btn" id="btn-tinh-sai-so" onclick="switchCategory('tinh_sai_so')">📊 5. Tính Sai Số & Thủy Lực</button>
         </div>
@@ -450,7 +450,7 @@
                     <select id="meterType" onfocus="this.select()" onchange="tinhToanThuyLuc()">
                         <option value="mag8000">Siemens MAG 8000 (Chạy Pin)</option>
                         <option value="mag5000">Siemens MAG 5000 (Điện lưới)</option>
-                        <option value="aichi_su">Aichi Tokei SU (Điện từ Nhật - R400)</option>
+                        <option value="aichi_su">Aichi Tokei SU-KF (Điện từ Nhật - R400)</option>
                         <option value="mechanical">Đồng hồ cơ khí (Cấp B / Cấp C - Woltman)</option>
                     </select>
                 </div>
@@ -517,55 +517,56 @@
 
 <script>
     const dataMag8000 = [
-        { dn: "DN25", inch: '1"', q1: "0.05", q2: "0.08", q3: "4", q4: "5", pn: "PN16" },
-        { dn: "DN40", inch: '1 1/2"', q1: "0.125", q2: "0.2", q3: "10", q4: "12.5", pn: "PN16" },
-        { dn: "DN50", inch: '2"', q1: "0.2", q2: "0.32", q3: "16", q4: "20", pn: "PN16" },
-        { dn: "DN65", inch: '2 1/2"', q1: "0.313", q2: "0.5", q3: "25", q4: "31.25", pn: "PN16" },
-        { dn: "DN80", inch: '3"', q1: "0.5", q2: "0.8", q3: "40", q4: "50", pn: "PN16" },
-        { dn: "DN100", inch: '4"', q1: "0.788", q2: "1.26", q3: "63", q4: "78.75", pn: "PN16" },
-        { dn: "DN125", inch: '5"', q1: "1.25", q2: "2", q3: "100", q4: "125", pn: "PN16" },
-        { dn: "DN150", inch: '6"', q1: "2", q2: "3.2", q3: "160", q4: "200", pn: "PN16" },
-        { dn: "DN200", inch: '8"', q1: "3.125", q2: "5", q3: "250", q4: "312.5", pn: "PN16" },
-        { dn: "DN250", inch: '10"', q1: "5", q2: "8", q3: "400", q4: "500", pn: "PN16" },
-        { dn: "DN300", inch: '12"', q1: "7.875", q2: "12.6", q3: "630", q4: "787.5", pn: "PN16" },
-        { dn: "DN350", inch: '14"', q1: "12.5", q2: "20", q3: "1000", q4: "1250", pn: "PN16" },
-        { dn: "DN400", inch: '16"', q1: "12.5", q2: "20", q3: "1000", q4: "1250", pn: "PN16" },
-        { dn: "DN500", inch: '20"', q1: "20", q2: "32", q3: "1600", q4: "2000", pn: "PN16" },
-        { dn: "DN600", inch: '24"', q1: "31.25", q2: "50", q3: "2500", q4: "3125", pn: "PN16" },
-        { dn: "DN700", inch: '28"', q1: "50", q2: "80", q3: "4000", q4: "5000", pn: "PN16" },
-        { dn: "DN800", inch: '32"', q1: "50", q2: "80", q3: "4000", q4: "5000", pn: "PN16" },
-        { dn: "DN900", inch: '36"', q1: "78.75", q2: "126", q3: "6300", q4: "7875", pn: "PN16" },
-        { dn: "DN1000", inch: '40"', q1: "78.75", q2: "126", q3: "6300", q4: "7875", pn: "PN16" },
-        { dn: "DN1200", inch: '48"', q1: "125", q2: "200", q3: "10000", q4: "12500", pn: "PN16" }
+        { dn: "DN25", inch: '1"', q1: "0.05", q2: "0.08", q3: "4", q4: "5", r: "R80", pn: "PN16" },
+        { dn: "DN40", inch: '1 1/2"', q1: "0.125", q2: "0.2", q3: "10", q4: "12.5", r: "R80", pn: "PN16" },
+        { dn: "DN50", inch: '2"', q1: "0.2", q2: "0.32", q3: "16", q4: "20", r: "R80", pn: "PN16" },
+        { dn: "DN65", inch: '2 1/2"', q1: "0.313", q2: "0.5", q3: "25", q4: "31.25", r: "R80", pn: "PN16" },
+        { dn: "DN80", inch: '3"', q1: "0.5", q2: "0.8", q3: "40", q4: "50", r: "R80", pn: "PN16" },
+        { dn: "DN100", inch: '4"', q1: "0.788", q2: "1.26", q3: "63", q4: "78.75", r: "R80", pn: "PN16" },
+        { dn: "DN125", inch: '5"', q1: "1.25", q2: "2", q3: "100", q4: "125", r: "R80", pn: "PN16" },
+        { dn: "DN150", inch: '6"', q1: "2", q2: "3.2", q3: "160", q4: "200", r: "R80", pn: "PN16" },
+        { dn: "DN200", inch: '8"', q1: "3.125", q2: "5", q3: "250", q4: "312.5", r: "R80", pn: "PN16" },
+        { dn: "DN250", inch: '10"', q1: "5", q2: "8", q3: "400", q4: "500", r: "R80", pn: "PN16" },
+        { dn: "DN300", inch: '12"', q1: "7.875", q2: "12.6", q3: "630", q4: "787.5", r: "R80", pn: "PN16" },
+        { dn: "DN350", inch: '14"', q1: "12.5", q2: "20", q3: "1000", q4: "1250", r: "R80", pn: "PN16" },
+        { dn: "DN400", inch: '16"', q1: "12.5", q2: "20", q3: "1000", q4: "1250", r: "R80", pn: "PN16" },
+        { dn: "DN500", inch: '20"', q1: "20", q2: "32", q3: "1600", q4: "2000", r: "R80", pn: "PN16" },
+        { dn: "DN600", inch: '24"', q1: "31.25", q2: "50", q3: "2500", q4: "3125", r: "R80", pn: "PN16" },
+        { dn: "DN700", inch: '28"', q1: "50", q2: "80", q3: "4000", q4: "5000", r: "R80", pn: "PN16" },
+        { dn: "DN800", inch: '32"', q1: "50", q2: "80", q3: "4000", q4: "5000", r: "R80", pn: "PN16" },
+        { dn: "DN900", inch: '36"', q1: "78.75", q2: "126", q3: "6300", q4: "7875", r: "R80", pn: "PN16" },
+        { dn: "DN1000", inch: '40"', q1: "78.75", q2: "126", q3: "6300", q4: "7875", r: "R80", pn: "PN16" },
+        { dn: "DN1200", inch: '48"', q1: "125", q2: "200", q3: "10000", q4: "12500", r: "R80", pn: "PN16" }
     ];
 
     const dataMag5000 = [
-        { dn: "DN15", inch: '1/2"', q1: "0.016", q2: "0.025", q3: "2.5", q4: "3.125", pn: "PN40" },
-        { dn: "DN25", inch: '1"', q1: "0.04", q2: "0.064", q3: "10", q4: "12.5", pn: "PN40" },
-        { dn: "DN40", inch: '1 1/2"', q1: "0.10", q2: "0.16", q3: "25", q4: "31.25", pn: "PN40" },
-        { dn: "DN50", inch: '2"', q1: "0.16", q2: "0.25", q3: "40", q4: "50", pn: "PN16" },
-        { dn: "DN80", inch: '3"', q1: "0.40", q2: "0.64", q3: "100", q4: "125", pn: "PN16" },
-        { dn: "DN100", inch: '4"', q1: "0.63", q2: "1.00", q3: "160", q4: "200", pn: "PN16" },
-        { dn: "DN150", inch: '6"', q1: "1.60", q2: "2.50", q3: "400", q4: "500", pn: "PN16" },
-        { dn: "DN200", inch: '8"', q1: "2.50", q2: "4.00", q3: "630", q4: "787.5", pn: "PN16" },
-        { dn: "DN250", inch: '10"', q1: "4.00", q2: "6.40", q3: "1000", q4: "1250", pn: "PN16" },
-        { dn: "DN300", inch: '12"', q1: "6.30", q2: "10.0", q3: "1600", q4: "2000", pn: "PN16" },
-        { dn: "DN400", inch: '16"', q1: "10.0", q2: "16.0", q3: "2500", q4: "3125", pn: "PN16" },
-        { dn: "DN500", inch: '20"', q1: "16.0", q2: "25.0", q3: "4000", q4: "5000", pn: "PN16" },
-        { dn: "DN600", inch: '24"', q1: "25.0", q2: "40.0", q3: "6300", q4: "7875", pn: "PN16" }
+        { dn: "DN15", inch: '1/2"', q1: "0.016", q2: "0.025", q3: "2.5", q4: "3.125", r: "R160", pn: "PN40" },
+        { dn: "DN25", inch: '1"', q1: "0.04", q2: "0.064", q3: "10", q4: "12.5", r: "R250", pn: "PN40" },
+        { dn: "DN40", inch: '1 1/2"', q1: "0.10", q2: "0.16", q3: "25", q4: "31.25", r: "R250", pn: "PN40" },
+        { dn: "DN50", inch: '2"', q1: "0.16", q2: "0.25", q3: "40", q4: "50", r: "R250", pn: "PN16" },
+        { dn: "DN80", inch: '3"', q1: "0.40", q2: "0.64", q3: "100", q4: "125", r: "R250", pn: "PN16" },
+        { dn: "DN100", inch: '4"', q1: "0.63", q2: "1.00", q3: "160", q4: "200", r: "R250", pn: "PN16" },
+        { dn: "DN150", inch: '6"', q1: "1.60", q2: "2.50", q3: "400", q4: "500", r: "R250", pn: "PN16" },
+        { dn: "DN200", inch: '8"', q1: "2.50", q2: "4.00", q3: "630", q4: "787.5", r: "R250", pn: "PN16" },
+        { dn: "DN250", inch: '10"', q1: "4.00", q2: "6.40", q3: "1000", q4: "1250", r: "R250", pn: "PN16" },
+        { dn: "DN300", inch: '12"', q1: "6.30", q2: "10.0", q3: "1600", q4: "2000", r: "R250", pn: "PN16" },
+        { dn: "DN400", inch: '16"', q1: "10.0", q2: "16.0", q3: "2500", q4: "3125", r: "R250", pn: "PN16" },
+        { dn: "DN500", inch: '20"', q1: "16.0", q2: "25.0", q3: "4000", q4: "5000", r: "R250", pn: "PN16" },
+        { dn: "DN600", inch: '24"', q1: "25.0", q2: "40.0", q3: "6300", q4: "7875", r: "R250", pn: "PN16" }
     ];
 
+    // BẢNG DỮ LIỆU ĐỒNG HỒ AICHI TOKEI SU-KF CHÍNH XÁC THEO TÀI LIỆU NSX
     const dataAichiSU = [
-        { dn: "DN40", inch: '1 1/2"', q1: "0.063", q2: "0.100", q3: "25.0", q4: "31.25", pn: "PN16" },
-        { dn: "DN50", inch: '2"', q1: "0.100", q2: "0.160", q3: "40.0", q4: "50.00", pn: "PN16" },
-        { dn: "DN65", inch: '2 1/2"', q1: "0.160", q2: "0.250", q3: "63.0", q4: "78.75", pn: "PN16" },
-        { dn: "DN80", inch: '3"', q1: "0.250", q2: "0.400", q3: "100.0", q4: "125.00", pn: "PN16" },
-        { dn: "DN100", inch: '4"', q1: "0.400", q2: "0.630", q3: "160.0", q4: "200.00", pn: "PN16" },
-        { dn: "DN125", inch: '5"', q1: "0.630", q2: "1.000", q3: "250.0", q4: "312.50", pn: "PN16" },
-        { dn: "DN150", inch: '6"', q1: "1.000", q2: "1.600", q3: "400.0", q4: "500.00", pn: "PN16" },
-        { dn: "DN200", inch: '8"', q1: "1.575", q2: "2.500", q3: "630.0", q4: "787.50", pn: "PN16" },
-        { dn: "DN250", inch: '10"', q1: "2.500", q2: "4.000", q3: "1000.0", q4: "1250.00", pn: "PN16" },
-        { dn: "DN300", inch: '12"', q1: "2.500", q2: "4.000", q3: "1000.0", q4: "1250.00", pn: "PN16" }
+        { dn: "DN40", model: "SU40-KF", q1: "0.100", q2: "0.160", q3: "25", q4: "31.3", r: "R250" },
+        { dn: "DN50", model: "SU50-KF", q1: "0.100", q2: "0.160", q3: "40", q4: "50.0", r: "R400" },
+        { dn: "DN65", model: "SU65-KF", q1: "0.158", q2: "0.252", q3: "63", q4: "78.8", r: "R400" },
+        { dn: "DN80", model: "SU80-KF", q1: "0.250", q2: "0.400", q3: "100", q4: "125.0", r: "R400" },
+        { dn: "DN100", model: "SU100-KF", q1: "0.400", q2: "0.640", q3: "160", q4: "200.0", r: "R400" },
+        { dn: "DN125", model: "SU125-KF", q1: "0.625", q2: "1.000", q3: "250", q4: "312.5", r: "R400" },
+        { dn: "DN150", model: "SU150-KF", q1: "1.000", q2: "1.600", q3: "400", q4: "500.0", r: "R400" },
+        { dn: "DN200", model: "SU200-KF", q1: "1.575", q2: "2.520", q3: "630", q4: "787.5", r: "R400" },
+        { dn: "DN250", model: "SU250-KF", q1: "2.500", q2: "4.000", q3: "1000", q4: "1250.0", r: "R400" },
+        { dn: "DN300", model: "SU300-KF", q1: "2.500", q2: "4.000", q3: "1000", q4: "1250.0", r: "R400" }
     ];
 
     const dataCoKhiB = [
@@ -634,9 +635,9 @@
         if (currentCategory === 'mag8000') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Dải đo tiêu chuẩn R=80 | Đơn vị: m³/h`;
         } else if (currentCategory === 'mag5000') {
-            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 5000 (Điện Lưới 220V/24V) | Bộ truyền tín hiệu chính xác cao | Đơn vị: m³/h`;
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 5000 (Điện Lưới 220V/24V) | Độ chính xác cao R160 - R250 | Đơn vị: m³/h`;
         } else if (currentCategory === 'aichi_su') {
-            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> AICHI TOKEI DENKI - SU Series (Điện từ Nhật Bản - Dải đo siêu rộng R400, Cực đại DN300) | Đơn vị: m³/h`;
+            info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> AICHI TOKEI DENKI - Dòng SU-KF (Điện từ Nhật Bản - Tiêu chuẩn ISO 4064 / OIML R49 - Dải đo cực rộng R250 - R400) | Đơn vị: m³/h`;
         } else if (currentCategory === 'co_khi') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> Đồng hồ nước Cơ khí - <strong>Cấp ${currentClass}</strong> (Theo tiêu chuẩn ISO 4064 / TCVN 5621) | Đơn vị: m³/h`;
         }
@@ -652,7 +653,7 @@
         let data = [];
         let headers = [];
 
-        if (currentCategory === 'mag8000' || currentCategory === 'mag5000' || currentCategory === 'aichi_su') {
+        if (currentCategory === 'mag8000' || currentCategory === 'mag5000') {
             headers = [
                 'Kích cỡ<br>(DN)', 
                 'Tương ứng<br>(Inch)', 
@@ -660,12 +661,10 @@
                 'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)', 
                 'Lưu lượng<br>danh định (Q<sub>3</sub>)', 
                 'Lưu lượng<br>quá tải (Q<sub>4</sub>)', 
-                'Áp lực<br>làm việc'
+                'Tỷ số R & Áp lực'
             ];
 
-            if (currentCategory === 'mag8000') data = dataMag8000;
-            else if (currentCategory === 'mag5000') data = dataMag5000;
-            else if (currentCategory === 'aichi_su') data = dataAichiSU;
+            data = (currentCategory === 'mag8000') ? dataMag8000 : dataMag5000;
 
             headers.forEach(h => {
                 let th = document.createElement('th');
@@ -683,7 +682,40 @@
                     <td>${row.q2}</td>
                     <td>${row.q3}</td>
                     <td>${row.q4}</td>
-                    <td>${row.pn}</td>
+                    <td>${row.r} (${row.pn})</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } else if (currentCategory === 'aichi_su') {
+            headers = [
+                'Kích cỡ<br>(DN/mm)', 
+                'Model tương ứng', 
+                'Lưu lượng<br>tối thiểu (Q<sub>1</sub>)', 
+                'Lưu lượng<br>chuyển tiếp (Q<sub>2</sub>)', 
+                'Lưu lượng<br>định mức (Q<sub>3</sub>)', 
+                'Lưu lượng<br>tối đa (Q<sub>4</sub>)', 
+                'Tỷ số dải đo (R)'
+            ];
+
+            data = dataAichiSU;
+
+            headers.forEach(h => {
+                let th = document.createElement('th');
+                th.innerHTML = h;
+                thead.appendChild(th);
+            });
+
+            data.forEach(row => {
+                let tr = document.createElement('tr');
+                tr.onclick = function() { selectRow(this); };
+                tr.innerHTML = `
+                    <td class="text-bold">${row.dn}</td>
+                    <td><b>${row.model}</b></td>
+                    <td>${row.q1}</td>
+                    <td>${row.q2}</td>
+                    <td><b>${row.q3}</b></td>
+                    <td>${row.q4}</td>
+                    <td><b style="color:#0284c7;">${row.r}</b></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -744,7 +776,7 @@
         }
     }
 
-    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO 3 DÒNG TỐI ƯU (ĐÃ LOẠI BỎ MỤC GỢI Ý RƯỜM RÀ)
+    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO CỦA PHÒNG KỸ THUẬT
     function tinhToanThuyLuc() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
@@ -766,7 +798,7 @@
         let meterName = "";
         if (type === "mag8000") { dbSource = dataMag8000; meterName = "Siemens MAG 8000 (Pin)"; }
         else if (type === "mag5000") { dbSource = dataMag5000; meterName = "Siemens MAG 5000 (Lưới)"; }
-        else if (type === "aichi_su") { dbSource = dataAichiSU; meterName = "Aichi Tokei SU"; }
+        else if (type === "aichi_su") { dbSource = dataAichiSU; meterName = "Aichi Tokei SU-KF"; }
         else if (type === "mechanical") { dbSource = dataCoKhiB; meterName = "Đồng hồ cơ khí"; }
 
         let dnStr = "DN" + Math.round(D);
@@ -791,7 +823,7 @@
             document.getElementById('specQ4').innerText = "-";
         }
 
-        // TÍNH TOÁN TỔN THẤT ÁP LỰC
+        // TÍNH TOÁN TỔN THẤT ÁP LỰC ΔP
         if (type === "mag8000" || type === "mag5000") {
             deltaP_mH2O = 0.16 * Math.pow(v / 3.0, 2);
         } else if (type === "aichi_su") {
@@ -807,7 +839,6 @@
             mpe = NaN;
             color = "#dc2626";
 
-            // Tìm cỡ đồng hồ lớn hơn đầu tiên thỏa mãn Q <= Q3 (danh định) hoặc Q <= Q4
             let biggerMeters = dbSource.filter(item => {
                 let itemQ4 = parseFloat(item.q4 || item.qmax);
                 let itemDN = parseInt(item.dn.replace("DN", ""));
@@ -829,7 +860,7 @@
                     🚨 VƯỢT QUÁ LƯU LƯỢNG LỚN NHẤT: Q₄ = ${q4} m³/h (LƯU LƯỢNG TÍNH TOÁN Q = ${Q} m³/h)
                 </div>
                 <div style="color: #991b1b; font-size: 13.5px; margin-bottom: 6px;">
-                    ⚠️ <b>Cảnh báo nguy cơ:</b> Lưu lượng quá tải ảnh hưởng đến sai số của đồng hồ. Cần thay thế hoặc lựa chọn lại cỡ đồng hồ phù hợp.
+                    ⚠️ <b>Cảnh báo nguy cơ:</b> Lưu lượng quá tải làm tăng sai số và rủi ro hỏng hóc thiết bị. Cần thay thế hoặc chọn lại cỡ đồng hồ lớn hơn.
                 </div>
                 <div style="color: #1e3a8a; font-size: 13.5px; background: #eff6ff; padding: 8px 10px; border-radius: 4px; border: 1px solid #bfdbfe;">
                     📌 ${optimalSuggestStr}
@@ -847,10 +878,10 @@
                     ⚠️ CẢNH BÁO VÙNG QUÁ TẢI NGẮN HẠN (Q₃ < Q ≤ Q₄)
                 </div>
                 <div style="color: #78350f; font-size: 13.5px; margin-bottom: 4px;">
-                    Lưu lượng tính toán Q = ${Q} m³/h nằm giữa Q₃ (${q3} m³/h) và Q₄ (${q4} m³/h) của ${dnStr}. Vận hành liên tục trong vùng này sẽ suy giảm nhanh tuổi thọ gối đỡ/mạch điện.
+                    Lưu lượng tính toán Q = ${Q} m³/h nằm giữa Q₃ (${q3} m³/h) và Q₄ (${q4} m³/h) của ${dnStr}. Vận hành lâu dài sẽ giảm tuổi thọ cảm biến.
                 </div>
                 <div style="color: #451a03; font-size: 13px; font-style: italic;">
-                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Nên nâng cỡ đồng hồ lên cỡ kế tiếp để đảm bảo thiết bị hoạt động ổn định lâu dài.
+                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Nên chọn lên cỡ đồng hồ kế tiếp để thiết bị hoạt động ổn định và lâu dài.
                 </div>
             `;
         }
@@ -864,10 +895,10 @@
                     ✅ VẬN HÀNH TỐI ƯU TRONG DẢI ĐO TIÊU CHUẨN
                 </div>
                 <div style="color: #14532d; font-size: 13.5px; margin-bottom: 4px;">
-                    Dải vận tốc dòng chảy v = ${v.toFixed(3)} m/s và lưu lượng Q = ${Q} m³/h đạt dải đo chính xác cao nhất (MPE ±${mpe.toFixed(2)}%) của thiết bị ${meterName} ${dnStr}.
+                    Vận tốc dòng chảy v = ${v.toFixed(3)} m/s và lưu lượng Q = ${Q} m³/h đạt dải đo chính xác cao nhất (MPE ±${mpe.toFixed(2)}%) của thiết bị ${meterName} ${dnStr}.
                 </div>
                 <div style="color: #166534; font-size: 13px; font-style: italic;">
-                    📌 Kết luận: Lựa chọn kích cỡ đồng hồ hiện tại hoàn toàn đáp ứng các yêu cầu kinh tế và tiêu chuẩn kỹ thuật.
+                    📌 Kết luận: Lựa chọn kích cỡ đồng hồ hiện tại hoàn toàn đáp ứng tốt các tiêu chuẩn kỹ thuật và thương mại.
                 </div>
             `;
         }
@@ -882,7 +913,7 @@
                     ⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP (Q₁ ≤ Q < Q₂)
                 </div>
                 <div style="color: #78350f; font-size: 13.5px; margin-bottom: 4px;">
-                    Lưu lượng rơi vào dải đo dưới làm gia tăng sai số đo lường lên ±${mpe.toFixed(2)}%. Tín hiệu cảm biến điện từ yếu hoặc lực quay tua-bin suy giảm.
+                    Lưu lượng rơi vào dải đo dưới làm gia tăng sai số đo lường lên ±${mpe.toFixed(2)}%.
                 </div>
                 <div style="color: #451a03; font-size: 13px; font-style: italic;">
                     📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Thu hẹp đường kính ống tại vị trí đặt đồng hồ hoặc chọn cỡ đồng hồ nhỏ hơn.
@@ -900,10 +931,10 @@
                     🚨 CẢNH BÁO DƯỚI NGƯỠNG BẮT ĐẦU ĐO (Q < Q₁)
                 </div>
                 <div style="color: #991b1b; font-size: 13.5px; margin-bottom: 4px;">
-                    Lưu lượng Q = ${Q} m³/h quá nhỏ, nằm ngoài ngưỡng ghi nhận Q₁ = ${q1} m³/h của ${meterName} ${dnStr}. Đồng hồ sẽ bỏ sót lưu lượng, gây thất thoát thương mại lớn!
+                    Lưu lượng Q = ${Q} m³/h quá nhỏ, nằm ngoài ngưỡng ghi nhận Q₁ = ${q1} m³/h của ${meterName} ${dnStr}. Đồng hồ sẽ bỏ sót lượng nước chảy qua!
                 </div>
                 <div style="color: #7f1d1d; font-size: 13px; font-style: italic;">
-                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Giảm mạnh cỡ đồng hồ hoặc chuyển sang loại đồng hồ điện từ có tỷ số R cao hơn (Ví dụ: Aichi SU R400).
+                    📌 Đề xuất lựa chọn đồng hồ phù hợp nhất: Giảm mạnh cỡ đồng hồ hoặc chuyển sang dòng đồng hồ có tỷ số R cao hơn (VD: Aichi SU-KF R400).
                 </div>
             `;
         }
