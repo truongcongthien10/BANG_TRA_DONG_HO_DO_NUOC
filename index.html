@@ -350,6 +350,74 @@
             text-decoration: underline;
         }
 
+        /* KHỐI DETAILS MỞ RỘNG THÔNG TIN CHI TIẾT ĐỒNG HỒ */
+        .details-wrapper {
+            margin: 10px 15px 15px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        details.tech-details {
+            width: 100%;
+        }
+
+        details.tech-details summary {
+            padding: 12px 15px;
+            font-size: 13.5px;
+            font-weight: bold;
+            color: #005a36;
+            background-color: #f1f5f9;
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        details.tech-details summary:hover {
+            background-color: #e2e8f0;
+            color: #0284c7;
+        }
+
+        .details-content {
+            padding: 15px 20px;
+            border-top: 1px solid #cbd5e1;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #fafafa;
+        }
+
+        .details-content h4 {
+            color: #0f172a;
+            font-size: 14.5px;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+        }
+
+        .details-content h4:first-child {
+            margin-top: 0;
+        }
+
+        .details-content ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-content li {
+            margin-bottom: 4px;
+        }
+
+        .details-content b {
+            color: #0f172a;
+        }
+
         .table-wrapper {
             overflow-x: auto;
             max-height: 520px;
@@ -538,6 +606,19 @@
             📌 <strong>Chuẩn tham chiếu:</strong> SIEMENS SITRANS FM MAG 8000 (Chạy Pin) | Đơn vị: m³/h
         </div>
 
+        <!-- BẢNG THÔNG TIN CƠ BẢN DẠNG COLLAPSIBLE (BUNG MỞ KHI CLICK) -->
+        <div class="details-wrapper">
+            <details class="tech-details" id="techDetailsAccordion">
+                <summary>
+                    <span>ℹ️ Xem thông số kỹ thuật chi tiết & Tiêu chuẩn cấu tạo thiết bị</span>
+                    <span style="font-size: 11px; opacity: 0.8;">▼ Click để mở/đóng</span>
+                </summary>
+                <div class="details-content" id="detailsDynamicContent">
+                    <!-- Nội dung sẽ tự động cập nhật theo loại đồng hồ -->
+                </div>
+            </details>
+        </div>
+
         <div class="table-wrapper">
             <table id="dataTable">
                 <thead>
@@ -554,7 +635,7 @@
 </div>
 
 <script>
-    // DỮ LIỆU ĐỒNG HỒ SIEMENS MAG 8000 CHUẨN THEO TÀI LIỆU HÃNG
+    // DỮ LIỆU ĐỒNG HỒ SIEMENS MAG 8000 & MAG 5000 CHUẨN
     const dataSiemensBase = [
         { dn: "DN25", inch: '1"', q3: 16, pn: "PN40", maxR: 250 },
         { dn: "DN40", inch: '1 1/2"', q3: 40, pn: "PN40", maxR: 250 },
@@ -580,7 +661,6 @@
         { dn: "DN1200", inch: '48"', q3: 25000, pn: "PN10", maxR: 250 }
     ];
 
-    // BẢNG DỮ LIỆU ĐỒNG HỒ AICHI TOKEI SU-KF CHÍNH XÁC THEO TÀI LIỆU NSX
     const dataAichiSU = [
         { dn: "DN40", model: "SU40-KF", q1: "0.100", q2: "0.160", q3: "25", q4: "31.3", r: "R250" },
         { dn: "DN50", model: "SU50-KF", q1: "0.100", q2: "0.160", q3: "40", q4: "50.0", r: "R400" },
@@ -679,6 +759,7 @@
             mechSubCtrl.style.display = (cat === 'co_khi') ? 'flex' : 'none';
 
             updateBanner();
+            renderDynamicDetails();
             renderTable();
         }
     }
@@ -702,6 +783,94 @@
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> AICHI TOKEI DENKI - Dòng SU-KF (Điện từ Nhật Bản - Tiêu chuẩn ISO 4064 / OIML R49 - Dải đo R250 - R400) | Đơn vị: m³/h<br>🔗 <a href="https://www.aichitokei.co.jp/eng/" target="_blank" rel="noopener noreferrer">Tài liệu đặc tính kỹ thuật chính thức của Aichi Tokei Denki</a>`;
         } else if (currentCategory === 'co_khi') {
             info.innerHTML = `📌 <strong>Chuẩn tham chiếu:</strong> Đồng hồ nước Cơ khí - <strong>Cấp ${currentClass}</strong> (Theo tiêu chuẩn ISO 4064 / TCVN 5621) | Đơn vị: m³/h`;
+        }
+    }
+
+    // HÀM HIỂN THỊ NỘI DUNG CHI TIẾT ĐỒNG HỒ THEO YÊU CẦU
+    function renderDynamicDetails() {
+        const target = document.getElementById('detailsDynamicContent');
+        
+        if (currentCategory === 'mag5000' || currentCategory === 'mag8000') {
+            let isPin = (currentCategory === 'mag8000');
+            let transmitterTitle = isPin ? "Bộ hiển thị và xử lý tín hiệu (Transmitter) — MAG 8000" : "1. Bộ hiển thị và xử lý tín hiệu (Transmitter) — MAG 5000";
+            let accuracy = isPin ? "± 0.4% ± 2 mm/s (Phiên bản chính xác cao) hoặc ± 0.8% giá trị đo" : "± 0.4% giá trị đo ± 1 mm/s";
+            let powerSupply = isPin ? "Pin Lithium nội bộ tích hợp (Tuổi thọ 6 - 15 năm tùy chế độ đo) hoặc nguồn ngoài 12-24V AC/DC." : "AC: 115 ... 230 V AC (+10% / -15%), 50/60 Hz | DC: 11 ... 30 V DC hoặc 11 ... 24 V AC";
+            
+            target.innerHTML = `
+                <p style="margin-bottom: 12px; font-weight: 500;">Hệ thống này hoạt động theo nguyên lý tách rời hoặc liền khối giữa <b>Bộ điều khiển hiển thị (Transmitter MAG 5000 / MAG 8000)</b> và <b>Cảm biến đo (Sensor MAG 5100 W)</b>. Dưới đây là thông số kỹ thuật chi tiết của từng bộ phận:</p>
+                
+                <h4>${transmitterTitle}</h4>
+                <p><b>Transmitter</b> là bộ xử lý trung tâm (đầu điều khiển của đồng hồ) có nhiệm vụ cấp dòng kích từ cho các cuộn dây cảm biến, xử lý tín hiệu điện áp thu được và hiển thị thông số lưu lượng.</p>
+                <ul>
+                    <li><b>Độ chính xác (Sai số toàn dải):</b> ${accuracy}.</li>
+                    <li><b>Nguồn cấp (Tùy chọn khi đặt hàng):</b> ${powerSupply}.</li>
+                    <li><b>Công suất tiêu thụ:</b> Tối đa 9 VA (Cho bản AC) hoặc 6 W (Cho bản DC).</li>
+                    <li><b>Màn hình hiển thị:</b> Màn hình đồ họa LCD (3 dòng, 20 ký tự), tích hợp đèn nền hiển thị lưu lượng tức thời, lưu lượng tổng tích lũy (Totalizer).</li>
+                    <li><b>Tín hiệu Ngõ ra (Outputs):</b>
+                        <ul>
+                            <li><b>01 Ngõ ra analog:</b> 4 ... 20 mA (Gánh tải tối đa 800 Ω).</li>
+                            <li><b>01 Ngõ ra xung/tần số:</b> Tùy chỉnh thang xung, dải tần số 0 ... 10 kHz.</li>
+                            <li><b>01 Ngõ ra rơ-le (Relay):</b> Tiếp điểm khô (Định mức 30V AC/DC, 1A), dùng để cài đặt cảnh báo lỗi hệ thống, rỗng ống, hoặc đảo chiều dòng chảy.</li>
+                        </ul>
+                    </li>
+                    <li><b>Giao thức truyền thông (Bus Communication):</b> Tích hợp sẵn giao tiếp giao lộ hồng ngoại (Local IrDA). Hỗ trợ gắn thêm module mở rộng <b>HART</b>, <b>Modbus RTU</b> hoặc <b>Profibus</b>.</li>
+                    <li><b>Vật liệu vỏ & Cấp bảo vệ:</b> Nhựa Polyamide gia cường sợi thủy tinh, đạt cấp chống nước <b>IP67 (NEMA 4X)</b>.</li>
+                </ul>
+
+                <h4>2. Cảm biến lưu lượng (Sensor) — MAG 5100 W</h4>
+                <p><b>MAG 5100 W</b> là phần thân ống kim loại lắp trực tiếp vào đường ống, chứa các cuộn dây tạo từ trường và điện cực tiếp xúc lưu chất.</p>
+                <ul>
+                    <li><b>Dải kích cỡ đường ống hỗ trợ:</b> DN 15 đến DN 1200 (Hoặc mở rộng lên tới DN 2000 tùy phiên bản).</li>
+                    <li><b>Vật liệu ống đo:</b> Thép không gỉ AISI 304.</li>
+                    <li><b>Vật liệu vỏ ngoài & Mặt bích:</b> Thép Carbon ASTM A 105, phủ lớp sơn chống ăn mòn cao cấp đạt cấp độ C4 theo tiêu chuẩn EN ISO 12944.</li>
+                    <li><b>Vật liệu lớp lót (Liner) & Nhiệt độ chất lỏng tương ứng:</b>
+                        <ul>
+                            <li><b>Lớp lót EPDM:</b> Chịu nhiệt độ chất lỏng từ <b>-10°C đến +70°C</b>. Đạt đầy đủ chứng chỉ an toàn vệ sinh cho nước uống (WRAS, NSF61, DVGW).</li>
+                            <li><b>Lớp lót Cao su cứng (NBR / Ebonite):</b> Chịu nhiệt độ <b>0°C đến +70°C</b>. Chuyên dụng cho các ứng dụng nước thô, nước thải hoặc bùn lỏng.</li>
+                        </ul>
+                    </li>
+                    <li><b>Vật liệu điện cực (Electrodes):</b> Hastelloy C-276 tiêu chuẩn, tích hợp sẵn các điện cực nối đất (Grounding electrodes) giúp chống nhiễu mà không cần vòng đệm tiếp địa.</li>
+                    <li><b>Cấp bảo vệ chống nước (IP Rating):</b>
+                        <ul>
+                            <li>Đạt tiêu chuẩn <b>IP67</b> khi lắp ráp liền thân (Compact) cùng transmitter.</li>
+                            <li>Đạt tiêu chuẩn <b>IP68 (NEMA 6P)</b> khi lắp rời kéo xa (Remote) và được đổ keo hộp đầu nối, cho phép ngập nước liên tục hoặc chôn ngầm.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>3. Tiêu chuẩn mặt bích áp dụng của dòng MAG 5100 W</h4>
+                <p>Cảm biến MAG 5100 W tương thích rộng rãi với hầu hết các kết nối công nghiệp toàn cầu thông qua các tiêu chuẩn bích:</p>
+                <ul>
+                    <li><b>Tiêu chuẩn Châu Âu:</b> EN 1092-1.
+                        <ul>
+                            <li>Cấp áp lực <b>PN 40:</b> Sử dụng cho các kích cỡ nhỏ từ DN 15 đến DN 40.</li>
+                            <li>Cấp áp lực <b>PN 16:</b> Tiêu chuẩn cho dải từ DN 50 đến DN 1200.</li>
+                            <li>Cấp áp lực <b>PN 10:</b> Tùy chọn có sẵn cho dải từ DN 200 đến DN 1200.</li>
+                        </ul>
+                    </li>
+                    <li><b>Tiêu chuẩn Mỹ:</b> ASME B16.5 Class 150 (Cho dải ống hệ inch).</li>
+                    <li><b>Tiêu chuẩn quốc tế khác:</b> Hỗ trợ sản xuất theo chuẩn Úc (AS 2129 / AS 4087) và chuẩn Nhật Bản (JIS B2220) nếu có yêu cầu.</li>
+                </ul>
+            `;
+        } else if (currentCategory === 'aichi_su') {
+            target.innerHTML = `
+                <h4>Đồng hồ nước điện từ Aichi Tokei SU-KF (Điện từ Nhật Bản)</h4>
+                <ul>
+                    <li><b>Công nghệ đo:</b> Điện từ siêu âm / Cảm ứng điện từ dải đo cực rộng R250 - R400.</li>
+                    <li><b>Cấp bảo vệ:</b> Tiêu chuẩn IP68 chống nước tuyệt đối, cho phép ngập sâu trong hố van.</li>
+                    <li><b>Nguồn cấp:</b> Pin Lithium công nghiệp tích hợp, tuổi thọ vận hành liên tục lên tới 10 năm.</li>
+                    <li><b>Truyền thông tích hợp:</b> Xuất tín hiệu xung, giao tiếp RS485 Modbus RTU / NB-IoT phục vụ đọc chỉ số từ xa DMA.</li>
+                </ul>
+            `;
+        } else {
+            target.innerHTML = `
+                <h4>Đồng hồ nước cơ khí Woltman (Cấp B / Cấp C)</h4>
+                <ul>
+                    <li><b>Tiêu chuẩn sản xuất:</b> ISO 4064 / TCVN 5621.</li>
+                    <li><b>Vật liệu thân:</b> Gang xám / Gang cầu phủ sơn Epoxy gia cường chống ăn mòn.</li>
+                    <li><b>Nguyên lý:</b> Truyền động từ tính khô, mặt số hút chân không chống đọng sương.</li>
+                </ul>
+            `;
         }
     }
 
@@ -838,7 +1007,7 @@
         }
     }
 
-    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO CỦA PHÒNG KỸ THUẬT
+    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO
     function tinhToanThuyLuc() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
