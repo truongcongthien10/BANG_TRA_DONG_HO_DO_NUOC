@@ -202,7 +202,7 @@
 
         .advice-item {
             font-size: 13.5px;
-            padding-top: 8px;
+            padding-top: 10px;
             border-top: 1px dashed #bae6fd;
             line-height: 1.5;
             margin-bottom: 8px;
@@ -437,7 +437,7 @@
             <div class="calc-grid">
                 <div class="form-group">
                     <label for="flowrate">Lưu lượng tính toán Q (m³/h):</label>
-                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 150" onfocus="this.select()" oninput="tinhToanThuyLuc()" required>
+                    <input type="number" id="flowrate" step="any" placeholder="Ví dụ: 100" onfocus="this.select()" oninput="tinhToanThuyLuc()" required>
                 </div>
                 
                 <div class="form-group">
@@ -466,7 +466,7 @@
                 </div>
                 
                 <div class="advice-item">
-                    Trạng thái & Cảnh báo kỹ thuật: <span id="resAdvice" style="font-weight: bold;"></span>
+                    <div id="resAdvice"></div>
                 </div>
 
                 <div class="spec-compare-box">
@@ -700,10 +700,9 @@
             data = (currentClass === 'B') ? dataCoKhiB : dataCoKhiC;
 
             headers.forEach(h => {
-                let th = document.getElementById('tableHeader');
-                let thElem = document.createElement('th');
-                thElem.innerHTML = h;
-                thead.appendChild(thElem);
+                let th = document.createElement('th');
+                th.innerHTML = h;
+                thead.appendChild(th);
             });
 
             data.forEach(row => {
@@ -745,7 +744,7 @@
         }
     }
 
-    // THUẬT TOÁN TÍNH TOÁN CẢNH BÁO MỚI CHUẨN XÁC THEO THÔNG SỐ NSX SIEMENS / AICHI / TCVN 8783
+    // THUẬT TOÁN TÍNH TOÁN KẾT QUẢ & PHÂN CẢNH BÁO 3 DÒNG TỐI ƯU
     function tinhToanThuyLuc() {
         const Q = parseFloat(document.getElementById('flowrate').value);
         const D = parseFloat(document.getElementById('diameter').value);
@@ -759,15 +758,16 @@
         const v = (4 * Q) / (Math.PI * Math.pow(D / 1000, 2) * 3600);
         let mpe = 0;
         let deltaP_mH2O = 0;
-        let advice = "";
+        let adviceHtml = "";
         let color = "#16a34a";
         let statusClass = "";
 
         let dbSource = [];
-        if (type === "mag8000") dbSource = dataMag8000;
-        else if (type === "mag5000") dbSource = dataMag5000;
-        else if (type === "aichi_su") dbSource = dataAichiSU;
-        else if (type === "mechanical") dbSource = dataCoKhiB;
+        let meterName = "";
+        if (type === "mag8000") { dbSource = dataMag8000; meterName = "Siemens MAG 8000 (Pin)"; }
+        else if (type === "mag5000") { dbSource = dataMag5000; meterName = "Siemens MAG 5000 (Lưới)"; }
+        else if (type === "aichi_su") { dbSource = dataAichiSU; meterName = "Aichi Tokei SU"; }
+        else if (type === "mechanical") { dbSource = dataCoKhiB; meterName = "Đồng hồ cơ khí"; }
 
         let dnStr = "DN" + Math.round(D);
         let matchedSpec = dbSource.find(item => item.dn === dnStr);
@@ -791,115 +791,125 @@
             document.getElementById('specQ4').innerText = "-";
         }
 
-        // 1. SIEMENS MAG 8000 (PIN)
-        if (type === "mag8000") {
+        // TÍNH TOÁN TỔN THẤT ÁP LỰC
+        if (type === "mag8000" || type === "mag5000") {
             deltaP_mH2O = 0.16 * Math.pow(v / 3.0, 2);
-
-            if (matchedSpec && Q > q4) {
-                statusClass = "danger-box";
-                mpe = NaN;
-                advice = `🚨 CẢNH BÁO QUÁ TẢI TIÊU CHUẨN NSX: Lưu lượng tính toán Q=${Q} m³/h ĐÃ VƯỢT QUÁ TẢI CỰC ĐẠI Q₄=${q4} m³/h của Siemens MAG 8000 DN${D}! Nguy cơ bão hòa tín hiệu đo điện từ, sụt áp lớn và suy giảm tuổi thọ pin. Đề xuất: Nâng cỡ đồng hồ lên DN150/DN200 hoặc chuyển sang Siemens MAG 5000 (Điện lưới)!`;
-                color = "#dc2626";
-            } else if (matchedSpec && Q > q3) {
-                statusClass = "warning-box";
-                mpe = 0.50;
-                advice = `⚠️ CẢNH BÁO VÙNG QUÁ TẢI NGẮN HẠN (Q₃ < Q ≤ Q₄): Lưu lượng Q=${Q} m³/h vượt quá lưu lượng danh định Q₃=${q3} m³/h. Chỉ cho phép vận hành trong thời gian ngắn theo khuyến cáo Siemens!`;
-                color = "#d97706";
-            } else if (v >= 0.5 && (!matchedSpec || Q >= q2)) {
-                mpe = 0.50;
-                advice = "Vận hành tối ưu: Dải vận tốc và lưu lượng đạt dải đo chính xác tiêu chuẩn (Vùng trên ±0.50%) của Siemens MAG 8000.";
-            } else if (matchedSpec && Q >= q1) {
-                statusClass = "warning-box";
-                mpe = 0.80;
-                advice = `⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP (Q₁ ≤ Q < Q₂): Lưu lượng rơi vào vùng dưới. Tín hiệu cảm ứng điện từ yếu, sai số tăng lên ±0.80%.`;
-                color = "#d97706";
-            } else if (v < 0.015 || (matchedSpec && Q < q1)) {
-                statusClass = "danger-box";
-                mpe = NaN;
-                advice = `🚨 CẢNH BÁO BẤT THƯỜNG: Lưu lượng Q=${Q} m³/h nhỏ hơn ngưỡng bắt đầu đo Q₁=${q1} m³/h của thiết bị. Đồng hồ không ghi nhận chính xác!`;
-                color = "#dc2626";
-            } else {
-                mpe = 0.50;
-                advice = "Vận hành ổn định.";
-            }
-        }
-        // 2. SIEMENS MAG 5000 (ĐIỆN LƯỚI)
-        else if (type === "mag5000") {
-            deltaP_mH2O = 0.16 * Math.pow(v / 3.0, 2);
-
-            if (matchedSpec && Q > q4) {
-                statusClass = "danger-box";
-                mpe = NaN;
-                advice = `🚨 CẢNH BÁO QUÁ TẢI NSX: Lưu lượng Q=${Q} m³/h vượt quá tải Q₄=${q4} m³/h của Siemens MAG 5000 DN${D}. Nguy cơ bão hòa mạch khuếch đại tín hiệu transmitter!`;
-                color = "#dc2626";
-            } else if (matchedSpec && Q > q3) {
-                statusClass = "warning-box";
-                mpe = 0.40;
-                advice = `⚠️ CẢNH BÁO HOẠT ĐỘNG VÙNG QUÁ TẢI NGẮN HẠN (Q₃ < Q ≤ Q₄): Khuyên dùng chuyển sang kích cỡ đồng hồ lớn hơn để đảm bảo tuổi thọ lớp lót Liner.`;
-                color = "#d97706";
-            } else if (v >= 0.5) {
-                mpe = 0.40;
-                advice = "Vận hành tối ưu: Đạt độ chính xác tiêu chuẩn Siemens MAG 5000 (±0.40%).";
-            } else if (v >= 0.1) {
-                statusClass = "warning-box";
-                mpe = 0.1 + (0.15 / v);
-                advice = "⚠️ CẢNH BÁO VẬN TỐC THẤP (v < 0.5 m/s): Tín hiệu cảm ứng điện từ yếu. Cân nhắc thu hẹp ống đặt cảm biến để tăng vận tốc dòng chảy.";
-                color = "#d97706";
-            } else {
-                statusClass = "danger-box";
-                mpe = 0.1 + (0.15 / v);
-                advice = "🚨 CẢNH BÁO DƯỚI NGƯỠNG ĐO: Vận tốc quá thấp (< 0.1 m/s), nhiễu tín hiệu vượt ngưỡng cho phép.";
-                color = "#dc2626";
-            }
-        }
-        // 3. AICHI TOKEI SU (R400 - NHẬT)
-        else if (type === "aichi_su") {
+        } else if (type === "aichi_su") {
             deltaP_mH2O = 0.10 * Math.pow(v / 3.0, 2);
-
-            if (D > 300) {
-                statusClass = "danger-box";
-                mpe = NaN;
-                advice = "🚨 CẢNH BÁO KÍCH CỠ: Aichi Tokei SU Series chỉ sản xuất tối đa đến DN300. Với DN" + D + "mm, vui lòng chọn dòng Siemens MAG!";
-                color = "#dc2626";
-            } else if (matchedSpec && Q > q4) {
-                statusClass = "danger-box";
-                mpe = NaN;
-                advice = `🚨 CẢNH BÁO QUÁ TẢI CỰC ĐẠI: Q=${Q} m³/h vượt quá Q₄=${q4} m³/h của Aichi SU DN${D}. Cần nâng cỡ đồng hồ!`;
-                color = "#dc2626";
-            } else if (v >= 0.2) {
-                mpe = 0.35;
-                advice = "Vận hành cực kỳ tối ưu: Aichi Tokei SU đạt độ chính xác siêu cao (Dải đo R400), tổn thất áp lực cực thấp.";
-            } else {
-                statusClass = "warning-box";
-                mpe = 0.50;
-                advice = "⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP: Dòng chảy nhỏ, sai số tăng nhẹ lên ±0.50%.";
-                color = "#d97706";
-            }
+        } else {
+            let Q3_est = 3500 * Math.PI * Math.pow(D / 1000, 2) / 4;
+            deltaP_mH2O = 6.3 * Math.pow(Q / Q3_est, 2);
         }
-        // 4. ĐỒNG HỒ CƠ KHÍ
-        else if (type === "mechanical") {
-            let Q3_estimate = 3500 * Math.PI * Math.pow(D / 1000, 2) / 4;
-            deltaP_mH2O = 6.3 * Math.pow(Q / Q3_estimate, 2);
 
-            if ((matchedSpec && Q > q4) || v > 3.0) {
-                statusClass = "danger-box";
-                mpe = NaN;
-                advice = `🚨 CẢNH BÁO QUÁ TẢI CƠ HỌC: Q=${Q} m³/h vượt quá tải Qmax=${q4} m³/h của Đồng hồ cơ DN${D}. Lực quán tính cơ học gây mòn gối đỡ, hỏng tua-bin và vi phạm TCVN 8783 / ISO 4064!`;
-                color = "#dc2626";
-            } else if (matchedSpec && Q > q3) {
-                statusClass = "warning-box";
-                mpe = 2.0;
-                advice = `⚠️ CẢNH BÁO VÙNG QUÁ TẢI: Đồng hồ cơ đang chạy trên lưu lượng danh định Qn=${q3} m³/h. Giảm tuổi thọ cơ khí!`;
-                color = "#d97706";
-            } else if (v >= 0.3) {
-                mpe = 2.0;
-                advice = "Vận hành ổn định: Đồng hồ cơ hoạt động trong dải lưu lượng danh định chuẩn Cấp B.";
+        // 1. TRƯỜNG HỢP QUÁ TẢI TIÊU CHUẨN (Q > Q4)
+        if (matchedSpec && Q > q4) {
+            statusClass = "danger-box";
+            mpe = NaN;
+            color = "#dc2626";
+
+            // Lọc danh sách các cỡ đồng hồ lớn hơn thỏa mãn Q <= Q4
+            let biggerMeters = dbSource.filter(item => {
+                let itemQ4 = parseFloat(item.q4 || item.qmax);
+                let itemDN = parseInt(item.dn.replace("DN", ""));
+                return itemDN > D && Q <= itemQ4;
+            });
+
+            let biggerListStr = "";
+            let optimalSuggestStr = "";
+
+            if (biggerMeters.length > 0) {
+                let availableDNs = biggerMeters.map(m => m.dn + " (Q₄=" + (m.q4 || m.qmax) + " m³/h)").join(", ");
+                biggerListStr = `Các cỡ đồng hồ ${meterName} lớn hơn phù hợp: <b>${availableDNs}</b>.`;
+                
+                let optimal = biggerMeters.find(m => Q <= parseFloat(m.q3 || m.qn)) || biggerMeters[0];
+                optimalSuggestStr = ` 👉 Đề xuất lựa chọn tối ưu: <b>${optimal.dn}</b> (${meterName}).`;
             } else {
-                statusClass = "warning-box";
-                mpe = 5.0;
-                advice = "⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP: Sai số đo tăng lên ±5.0%, gây thất thoát thương mại.";
-                color = "#d97706";
+                biggerListStr = `Đã vượt quá dải đo của toàn bộ các cỡ thuộc dòng ${meterName}.`;
+                optimalSuggestStr = ` 👉 Đề xuất: Chuyển sang Siemens MAG 5000 (Điện lưới) hoặc kích thước ống lớn hơn!`;
             }
+
+            adviceHtml = `
+                <div style="color: #dc2626; font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">
+                    🚨 VƯỢT QUÁ LƯU LƯỢNG LỚN NHẤT: Q₄ = ${q4} m³/h (Lưu lượng tính toán Q = ${Q} m³/h)
+                </div>
+                <div style="color: #991b1b; font-size: 13.5px; margin-bottom: 6px;">
+                    ⚠️ <b>Cảnh báo nguy cơ:</b> Dòng chảy quá tải làm bão hòa cảm biến điện từ, sụt áp tăng vọt và gây sai số đo nghiêm trọng. Cần thay thế hoặc lựa chọn lại cỡ đồng hồ phù hợp.
+                </div>
+                <div style="color: #1e3a8a; font-size: 13.5px; background: #eff6ff; padding: 6px 10px; border-radius: 4px; border: 1px solid #bfdbfe;">
+                    📌 <b>Gợi ý thay thế:</b> ${biggerListStr}${optimalSuggestStr}
+                </div>
+            `;
+        } 
+        // 2. TRƯỜNG HỢP VÙNG QUÁ TẢI NGẮN HẠN (Q3 < Q <= Q4)
+        else if (matchedSpec && Q > q3) {
+            statusClass = "warning-box";
+            mpe = (type === "mechanical") ? 2.0 : 0.5;
+            color = "#d97706";
+
+            adviceHtml = `
+                <div style="color: #d97706; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                    ⚠️ CẢNH BÁO VÙNG QUÁ TẢI NGẮN HẠN (Q₃ < Q ≤ Q₄)
+                </div>
+                <div style="color: #78350f; font-size: 13.5px; margin-bottom: 4px;">
+                    Lưu lượng tính toán Q = ${Q} m³/h nằm giữa Q₃ (${q3} m³/h) và Q₄ (${q4} m³/h) của ${dnStr}. Vận hành liên tục trong vùng này sẽ suy giảm nhanh tuổi thọ gối đỡ/mạch điện.
+                </div>
+                <div style="color: #451a03; font-size: 13px; font-style: italic;">
+                    📌 Đề xuất: Nên cân nhắc nâng cỡ đồng hồ lên cỡ kế tiếp để đảm bảo thiết bị hoạt động ổn định lâu dài.
+                </div>
+            `;
+        }
+        // 3. TRƯỜNG HỢP VẬN HÀNH TỐI ƯU (Q2 <= Q <= Q3)
+        else if (v >= 0.3 && (!matchedSpec || Q >= q2)) {
+            mpe = (type === "mag5000") ? 0.40 : ((type === "aichi_su") ? 0.35 : ((type === "mechanical") ? 2.0 : 0.50));
+            color = "#16a34a";
+
+            adviceHtml = `
+                <div style="color: #16a34a; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                    ✅ VẬN HÀNH TỐI ƯU TRONG DẢI ĐO TIÊU CHUẨN
+                </div>
+                <div style="color: #14532d; font-size: 13.5px; margin-bottom: 4px;">
+                    Dải vận tốc dòng chảy v = ${v.toFixed(3)} m/s và lưu lượng Q = ${Q} m³/h đạt dải đo chính xác cao nhất (MPE ±${mpe.toFixed(2)}%) của thiết bị ${meterName} ${dnStr}.
+                </div>
+                <div style="color: #166534; font-size: 13px; font-style: italic;">
+                    📌 Kết luận: Lựa chọn kích cỡ đồng hồ hoàn toàn đáp ứng các yêu cầu kinh tế và tiêu chuẩn kỹ thuật.
+                </div>
+            `;
+        }
+        // 4. TRƯỜNG HỢP VÙNG LƯU LƯỢNG THẤP (Q1 <= Q < Q2)
+        else if (matchedSpec && Q >= q1) {
+            statusClass = "warning-box";
+            mpe = (type === "mechanical") ? 5.0 : 0.8;
+            color = "#d97706";
+
+            adviceHtml = `
+                <div style="color: #d97706; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                    ⚠️ CẢNH BÁO VÙNG LƯU LƯỢNG THẤP (Q₁ ≤ Q < Q₂)
+                </div>
+                <div style="color: #78350f; font-size: 13.5px; margin-bottom: 4px;">
+                    Lưu lượng rơi vào dải đo dưới làm gia tăng sai số đo lường lên ±${mpe.toFixed(2)}%. Tín hiệu cảm biến điện từ yếu hoặc lực quay tua-bin suy giảm.
+                </div>
+                <div style="color: #451a03; font-size: 13px; font-style: italic;">
+                    📌 Đề xuất: Nên thu hẹp đường kính ống tại đoạn đặt đồng hồ hoặc giảm cỡ đồng hồ để tăng vận tốc dòng chảy.
+                </div>
+            `;
+        }
+        // 5. CẢNH BÁO DƯỚI NGƯỠNG BẮT ĐẦU ĐO (Q < Q1)
+        else {
+            statusClass = "danger-box";
+            mpe = NaN;
+            color = "#dc2626";
+
+            adviceHtml = `
+                <div style="color: #dc2626; font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                    🚨 CẢNH BÁO DƯỚI NGƯỠNG BẮT ĐẦU ĐO (Q < Q₁)
+                </div>
+                <div style="color: #991b1b; font-size: 13.5px; margin-bottom: 4px;">
+                    Lưu lượng Q = ${Q} m³/h quá nhỏ, nằm ngoài ngưỡng ghi nhận Q₁ = ${q1} m³/h của ${meterName} ${dnStr}. Đồng hồ sẽ bỏ sót lưu lượng, gây thất thoát thương mại lớn!
+                </div>
+                <div style="color: #7f1d1d; font-size: 13px; font-style: italic;">
+                    📌 Đề xuất: Giảm mạnh cỡ đồng hồ hoặc chuyển sang loại đồng hồ điện từ có tỷ số R cao hơn (Ví dụ: Aichi SU R400).
+                </div>
+            `;
         }
 
         const deltaP_bar = deltaP_mH2O / 10.0;
@@ -917,9 +927,8 @@
             document.getElementById('resError').innerText = "± " + mpe.toFixed(2) + " %";
         }
         
-        const adviceSpan = document.getElementById('resAdvice');
-        adviceSpan.innerText = advice;
-        adviceSpan.style.color = color;
+        const adviceDiv = document.getElementById('resAdvice');
+        adviceDiv.innerHTML = adviceHtml;
         
         resultBox.style.display = 'block';
     }
