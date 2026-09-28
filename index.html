@@ -395,7 +395,7 @@
         .details-content h4 {
             color: #0f172a;
             font-size: 14.5px;
-            margin-top: 12px;
+            margin-top: 14px;
             margin-bottom: 6px;
             border-bottom: 1px solid #e2e8f0;
             padding-bottom: 4px;
@@ -614,7 +614,7 @@
                     <span style="font-size: 11px; opacity: 0.8;">▼ Click để mở/đóng</span>
                 </summary>
                 <div class="details-content" id="detailsDynamicContent">
-                    <!-- Nội dung sẽ tự động cập nhật theo loại đồng hồ -->
+                    <!-- Nội dung tự động hiển thị chính xác theo từng loại Tab -->
                 </div>
             </details>
         </div>
@@ -786,24 +786,48 @@
         }
     }
 
-    // HÀM HIỂN THỊ NỘI DUNG CHI TIẾT ĐỒNG HỒ THEO YÊU CẦU
+    // HÀM CẬP NHẬT CHÍNH XÁC NỘI DUNG THÔNG SỐ KỸ THUẬT VÀ TIÊU CHUẨN CỦA TỪNG TAB
     function renderDynamicDetails() {
         const target = document.getElementById('detailsDynamicContent');
         
-        if (currentCategory === 'mag5000' || currentCategory === 'mag8000') {
-            let isPin = (currentCategory === 'mag8000');
-            let transmitterTitle = isPin ? "Bộ hiển thị và xử lý tín hiệu (Transmitter) — MAG 8000" : "1. Bộ hiển thị và xử lý tín hiệu (Transmitter) — MAG 5000";
-            let accuracy = isPin ? "± 0.4% ± 2 mm/s (Phiên bản chính xác cao) hoặc ± 0.8% giá trị đo" : "± 0.4% giá trị đo ± 1 mm/s";
-            let powerSupply = isPin ? "Pin Lithium nội bộ tích hợp (Tuổi thọ 6 - 15 năm tùy chế độ đo) hoặc nguồn ngoài 12-24V AC/DC." : "AC: 115 ... 230 V AC (+10% / -15%), 50/60 Hz | DC: 11 ... 30 V DC hoặc 11 ... 24 V AC";
-            
+        // TAB 1: DÀNH RIÊNG CHO SIEMENS MAG 8000 (CHẠY PIN)
+        if (currentCategory === 'mag8000') {
             target.innerHTML = `
-                <p style="margin-bottom: 12px; font-weight: 500;">Hệ thống này hoạt động theo nguyên lý tách rời hoặc liền khối giữa <b>Bộ điều khiển hiển thị (Transmitter MAG 5000 / MAG 8000)</b> và <b>Cảm biến đo (Sensor MAG 5100 W)</b>. Dưới đây là thông số kỹ thuật chi tiết của từng bộ phận:</p>
+                <p style="margin-bottom: 12px; font-weight: 500;">Dưới đây là thông số kỹ thuật chi tiết của dòng đồng hồ nước điện từ độc lập chạy bằng pin <b>Siemens SITRANS FM MAG 8000</b>:</p>
                 
-                <h4>${transmitterTitle}</h4>
-                <p><b>Transmitter</b> là bộ xử lý trung tâm (đầu điều khiển của đồng hồ) có nhiệm vụ cấp dòng kích từ cho các cuộn dây cảm biến, xử lý tín hiệu điện áp thu được và hiển thị thông số lưu lượng.</p>
+                <h4>Bộ hiển thị và cảm biến tích hợp — MAG 8000</h4>
+                <p><b>MAG 8000</b> là giải pháp đo lưu lượng chuyên dụng cho mạng lưới phân phối cấp nước và giám sát DMA không sẵn có nguồn điện lưới.</p>
                 <ul>
-                    <li><b>Độ chính xác (Sai số toàn dải):</b> ${accuracy}.</li>
-                    <li><b>Nguồn cấp (Tùy chọn khi đặt hàng):</b> ${powerSupply}.</li>
+                    <li><b>Độ chính xác (Sai số toàn dải):</b> ± 0.4% ± 2 mm/s (Phiên bản chính xác cao) hoặc ± 0.8% giá trị đo tiêu chuẩn.</li>
+                    <li><b>Nguồn cấp:</b> Pin Lithium nội bộ tích hợp (Tuổi thọ từ <b>6 đến 15 năm</b> tùy chế độ lấy mẫu đo) hoặc bộ chuyển đổi nguồn ngoài 12-24V AC/DC.</li>
+                    <li><b>Dải kích cỡ đường ống hỗ trợ:</b> DN 25 đến DN 1200 (Mặt bích tiêu chuẩn EN 1092-1, ASME B16.5).</li>
+                    <li><b>Màn hình hiển thị:</b> Màn hình đồ họa LCD sắc nét, hiển thị lưu lượng tức thời, lưu lượng tổng tích lũy (Totalizer) và mã báo lỗi chẩn đoán.</li>
+                    <li><b>Tín hiệu Ngõ ra & Truyền thông:</b>
+                        <ul>
+                            <li><b>Ngõ ra xung kép (Passive Pulse):</b> Tùy chỉnh thang xung, lập trình hướng dòng chảy.</li>
+                            <li><b>Giao thức truyền thông:</b> Tích hợp sẵn cổng hồng ngoại IrDA. Hỗ trợ lắp mở rộng Module Modbus RTU (RS485), 3G/4G/3G/GPRS Datalogger giúp đọc dữ liệu tự động từ xa.</li>
+                        </ul>
+                    </li>
+                    <li><b>Cấp bảo vệ chống nước (IP Rating):</b> Đạt tiêu chuẩn <b>IP68 (NEMA 6P)</b> chống nước tuyệt đối cho phép ngập sâu liên tục hoặc chôn ngầm trực tiếp dưới lòng đất.</li>
+                    <li><b>Lớp lót ống đo (Liner):</b> Lớp lót EPDM đạt chứng nhận vệ sinh nước uống quốc tế (WRAS, NSF61, DVGW). Nhiệt độ chất lỏng làm việc: 0°C đến +70°C.</li>
+                </ul>
+            `;
+        } 
+        // TAB 2: DÀNH RIÊNG CHO SIEMENS MAG 5000 (ĐIỆN LƯỚI) KẾT HỢP CẢM BIẾN MAG 5100 W
+        else if (currentCategory === 'mag5000') {
+            target.innerHTML = `
+                <p style="margin-bottom: 12px; font-weight: 500;">Hệ thống này hoạt động theo nguyên lý tách rời hoặc liền khối giữa <b>Bộ điều khiển hiển thị (Transmitter MAG 5000)</b> và <b>Cảm biến đo (Sensor MAG 5100 W)</b>. Dưới đây là thông số kỹ thuật chi tiết của từng bộ phận:</p>
+                
+                <h4>1. Bộ hiển thị và xử lý tín hiệu (Transmitter) — MAG 5000</h4>
+                <p><b>Transmitter MAG 5000</b> là bộ xử lý trung tâm (đầu điều khiển của đồng hồ) có nhiệm vụ cấp dòng kích từ cho các cuộn dây cảm biến, xử lý tín hiệu điện áp thu được và hiển thị thông số lưu lượng.</p>
+                <ul>
+                    <li><b>Độ chính xác (Sai số toàn dải):</b> ± 0.4% giá trị đo ± 1 mm/s.</li>
+                    <li><b>Nguồn cấp (Tùy chọn khi đặt hàng):</b>
+                        <ul>
+                            <li>Nguồn điện xoay chiều: <b>115 ... 230 V AC</b> (+10% / -15%), 50/60 Hz.</li>
+                            <li>Nguồn điện một chiều: <b>11 ... 30 V DC</b> hoặc <b>11 ... 24 V AC</b>.</li>
+                        </ul>
+                    </li>
                     <li><b>Công suất tiêu thụ:</b> Tối đa 9 VA (Cho bản AC) hoặc 6 W (Cho bản DC).</li>
                     <li><b>Màn hình hiển thị:</b> Màn hình đồ họa LCD (3 dòng, 20 ký tự), tích hợp đèn nền hiển thị lưu lượng tức thời, lưu lượng tổng tích lũy (Totalizer).</li>
                     <li><b>Tín hiệu Ngõ ra (Outputs):</b>
@@ -852,17 +876,21 @@
                     <li><b>Tiêu chuẩn quốc tế khác:</b> Hỗ trợ sản xuất theo chuẩn Úc (AS 2129 / AS 4087) và chuẩn Nhật Bản (JIS B2220) nếu có yêu cầu.</li>
                 </ul>
             `;
-        } else if (currentCategory === 'aichi_su') {
+        } 
+        // TAB 3: AICHI TOKEI SU-KF
+        else if (currentCategory === 'aichi_su') {
             target.innerHTML = `
                 <h4>Đồng hồ nước điện từ Aichi Tokei SU-KF (Điện từ Nhật Bản)</h4>
                 <ul>
-                    <li><b>Công nghệ đo:</b> Điện từ siêu âm / Cảm ứng điện từ dải đo cực rộng R250 - R400.</li>
+                    <li><b>Công nghệ đo:</b> Điện từ cảm ứng từ trường dải đo cực rộng R250 - R400.</li>
                     <li><b>Cấp bảo vệ:</b> Tiêu chuẩn IP68 chống nước tuyệt đối, cho phép ngập sâu trong hố van.</li>
                     <li><b>Nguồn cấp:</b> Pin Lithium công nghiệp tích hợp, tuổi thọ vận hành liên tục lên tới 10 năm.</li>
                     <li><b>Truyền thông tích hợp:</b> Xuất tín hiệu xung, giao tiếp RS485 Modbus RTU / NB-IoT phục vụ đọc chỉ số từ xa DMA.</li>
                 </ul>
             `;
-        } else {
+        } 
+        // TAB 4: ĐỒNG HỒ CƠ KHÍ
+        else {
             target.innerHTML = `
                 <h4>Đồng hồ nước cơ khí Woltman (Cấp B / Cấp C)</h4>
                 <ul>
