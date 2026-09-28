@@ -635,7 +635,7 @@
 </div>
 
 <script>
-    // DỮ LIỆU ĐỒNG HỒ SIEMENS MAG 8000 & MAG 5000 CHUẨN
+    // DỮ LIỆU ĐỒNG HỒ SIEMENS MAG 8000 & MAG 5000 CHUẨN TỪ NSX SIEMENS
     const dataSiemensBase = [
         { dn: "DN25", inch: '1"', q3: 16, pn: "PN40", maxR: 250 },
         { dn: "DN40", inch: '1 1/2"', q3: 40, pn: "PN40", maxR: 250 },
@@ -661,6 +661,7 @@
         { dn: "DN1200", inch: '48"', q3: 25000, pn: "PN10", maxR: 250 }
     ];
 
+    // DỮ LIỆU AICHI TOKEI SU-KF CHUẨN TỪ NSX AICHI TOKEI DENKI (NHẬT BẢN)
     const dataAichiSU = [
         { dn: "DN40", model: "SU40-KF", q1: "0.100", q2: "0.160", q3: "25", q4: "31.3", r: "R250" },
         { dn: "DN50", model: "SU50-KF", q1: "0.100", q2: "0.160", q3: "40", q4: "50.0", r: "R400" },
@@ -674,6 +675,7 @@
         { dn: "DN300", model: "SU300-KF", q1: "2.500", q2: "4.000", q3: "1000", q4: "1250.0", r: "R400" }
     ];
 
+    // DỮ LIỆU ĐỒNG HỒ CƠ KHÍ THEO TIÊU CHUẨN ISO 4064 / TCVN 5621
     const dataCoKhiB = [
         { dn: "DN15", inch: '1/2"', qmin: "0.03", qt: "0.12", qn: "1.5", qmax: "3.0", pn: "PN10/16" },
         { dn: "DN20", inch: '3/4"', qmin: "0.05", qt: "0.20", qn: "2.5", qmax: "5.0", pn: "PN10/16" },
@@ -805,7 +807,7 @@
                     <li><b>Tín hiệu Ngõ ra & Truyền thông:</b>
                         <ul>
                             <li><b>Ngõ ra xung kép (Passive Pulse):</b> Tùy chỉnh thang xung, lập trình hướng dòng chảy.</li>
-                            <li><b>Giao thức truyền thông:</b> Tích hợp sẵn cổng hồng ngoại IrDA. Hỗ trợ lắp mở rộng Module Modbus RTU (RS485), 3G/4G/3G/GPRS Datalogger giúp đọc dữ liệu tự động từ xa.</li>
+                            <li><b>Giao thức truyền thông:</b> Tích hợp sẵn cổng hồng ngoại IrDA. Hỗ trợ lắp mở rộng Module Modbus RTU (RS485), 3G/4G Datalogger giúp đọc dữ liệu tự động từ xa.</li>
                         </ul>
                     </li>
                     <li><b>Cấp bảo vệ chống nước (IP Rating):</b> Đạt tiêu chuẩn <b>IP68 (NEMA 6P)</b> chống nước tuyệt đối cho phép ngập sâu liên tục hoặc chôn ngầm trực tiếp dưới lòng đất.</li>
